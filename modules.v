@@ -233,4 +233,23 @@ module ALU (
             //OutALU = { A[0], A[7:1]};
         end
     endcase
+    always @(OutALU) begin
+        if(OutALU == 0) begin
+            OutFlag[0] = 1;
+        end else begin
+            OutFlag[0] = 0;
+        end
+
+        if(OutALU[7] == 1) begin
+            OutFlag[2] = 1;
+        end else begin
+            OutFlag[2] = 0;
+        end
+
+        if(OutALU > 8'b11111111) begin
+            OutFlag[3] = 1;
+        end else begin
+            OutFlag[3] = 0;
+        end
+
 endmodule
