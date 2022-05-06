@@ -135,10 +135,23 @@ module IR (
     input NL/H, En, [1:0] FunSel, [7:0] I,
     output [15:0] IRout
 );
-    wire [7:0] I_temp;
+    wire [15:0] I_temp;
 
-    n-bitRegister #(.N(16)) IR(.E(En), .FunSel(FunSel), .I(I), .Q(IR_Q));
+    n-bitRegister #(.N(16)) IR(.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
     wire [15:0] IR_Q;
     assign IRout = IR_Q;
+
+    always @(NL/H) begin
+        case (NL/H)
+            0: begin
+                I_temp[15:8] = I;
+            end
+            1: begin
+                I_temp[7:0] = I;
+            end
+            default: 
+        endcase
+    end
     
 endmodule
+
