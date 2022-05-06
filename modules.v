@@ -155,3 +155,82 @@ module IR (
     
 endmodule
 
+module ALU (
+    input [3:0] FunSel, [7:0] A, [7:0] B, Cin, 
+    output [7:0] OutALU, 
+    output reg [3:0] OutFlag 
+);
+
+    always @(FunSel) 
+    case (FunSel)
+        4'b0000: begin
+            OutALU = A;
+        end
+        4'b0001: begin
+            OutALU = B;
+        end
+        4'b0010: begin
+            OutALU = ~A;
+        end
+        4'b0011: begin
+            OutALU = ~B;
+        end
+        4'b0100: begin
+            OutALU = A + B;
+        end
+        4'b0101: begin
+            OutALU = A + B + Cin;
+        end
+        4'b0110: begin
+            OutALU = A - B;
+        end
+        4'b0111: begin
+            OutALU = A & B;
+        end
+        4'b1000: begin
+            OutALU = A | B;
+        end
+        4'b1001: begin
+            OutALU = A ^ B;
+        end
+        4'b1010: begin
+            OutFlag[1] = A[7];
+            OutALU = A << 1;
+        end
+        4'b1011: begin
+            OutFlag[1] = A[0];
+            OutALU = A >> 1;
+        end
+        4'b1100: begin
+            OutALU = A <<< 1;
+        end
+        4'b1101: begin
+            OutALU = A >>> 1;
+        end
+        4'b1110: begin
+            OutFlag[1] <= A[7];
+            A[0] <= OutFlag[1];
+            A[1] <= A[0];
+            A[2] <= A[1];
+            A[3] <= A[2];
+            A[4] <= A[3];
+            A[5] <= A[4];
+            A[6] <= A[5];
+            A[7] <= A[6];
+            
+            //OutALU = {A[6:0], A[7]};
+        end
+        4'b1111: begin
+            OutFlag[1] <= A[0];
+            A[0] <= A[1];
+            A[1] <= A[2];
+            A[2] <= A[3];
+            A[3] <= A[4];
+            A[4] <= A[5];
+            A[5] <= A[6];
+            A[6] <= A[7];
+            A[7] <= OutFlag[1];
+            //OutALU = { A[0], A[7:1]};
+        end
+    endcase
+endmodule
