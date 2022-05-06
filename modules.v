@@ -33,6 +33,8 @@ module n-bitRegister #(
     
 endmodule
 
+//Part 2
+
 module RegFile (
     input [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
     output [7:0] OutA, [7:0] OutB
@@ -155,6 +157,7 @@ module IR (
     
 endmodule
 
+//Part 3
 module ALU (
     input [3:0] FunSel, [7:0] A, [7:0] B, Cin, 
     output [7:0] OutALU, 
