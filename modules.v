@@ -2,14 +2,12 @@
 //Part 1 
 
 
-module n-bitRegister #(
-    parameter N
-) (
+module n_bitRegister #(parameter N = 8) (
     input E, [1:0] FunSel, [N-1:0] I,
     output [N-1:0] Q
 );
 
-    wire [N-1:0] Q_temp;
+    reg [N-1:0] Q_temp;
     assign Q = Q_temp;
     always @( E) begin
         case (FunSel)
@@ -39,17 +37,18 @@ module RegFile (
     input [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
     output [7:0] OutA, [7:0] OutB
 );
-    n-bitRegister #(.N(8)) R1(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R1_Q));
-    n-bitRegister #(.N(8)) R2(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R2_Q));
-    n-bitRegister #(.N(8)) R3(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R3_Q));
-    n-bitRegister #(.N(8)) R4(.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R4_Q));
     wire [7:0] R1_Q;
     wire [7:0] R2_Q;
     wire [7:0] R3_Q;
     wire [7:0] R4_Q;
+    n_bitRegister #(.N(8)) R1(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R1_Q));
+    n_bitRegister #(.N(8)) R2(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R2_Q));
+    n_bitRegister #(.N(8)) R3(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R3_Q));
+    n_bitRegister #(.N(8)) R4(.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R4_Q));
+
     //wire [3:0] R_En;
 
-    wire [7:0] OutA_temp, OutB_temp;
+    reg [7:0] OutA_temp, OutB_temp;
     assign OutA = OutA_temp;
     assign OutB = OutB_temp;
     always@(OutASel) begin
@@ -98,17 +97,39 @@ module ARF (
     output [7:0] OutC, [7:0] OutD
 );
 
-    n-bitRegister #(.N(8)) PC(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(PC_Q));
-    n-bitRegister #(.N(8)) AR(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(AR_Q));
-    n-bitRegister #(.N(8)) SP(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(SP_Q));
-
     wire [7:0] PC_Q;
     wire [7:0] AR_Q;
     wire [7:0] SP_Q;
+    
+    n_bitRegister #(.N(8)) PC(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(PC_Q));
+    n_bitRegister #(.N(8)) AR(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(AR_Q));
+    n_bitRegister #(.N(8)) SP(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(SP_Q));
 
-    wire [7:0] OutC_temp, OutC_temp;
+
+
+    reg [7:0] OutC_temp, OutD_temp;
     assign OutC = OutC_temp;
     assign OutD = OutD_temp;
+
+    always@(OutCSel) begin
+        case (OutCSel)
+        0: begin
+            OutC_temp = PC_Q;
+        end
+        1: begin
+            OutC_temp = PC_Q;
+        end
+        2: begin
+            OutC_temp = AR_Q;
+        end
+        3: begin
+            OutC_temp = SP_Q;
+        end
+        default: begin
+            OutC_temp = OutC_temp;
+        end
+        endcase
+    end
 
     always@(OutDSel) begin
         case (OutDSel)
@@ -128,30 +149,30 @@ module ARF (
             OutD_temp = OutD_temp;
         end
         endcase
-    end
+     end    
 
     
 endmodule
 
 module IR (
-    input NL/H, En, [1:0] FunSel, [7:0] I,
+    input NL_H, En, [1:0] FunSel, [7:0] I,
     output [15:0] IRout
 );
-    wire [15:0] I_temp;
-
-    n-bitRegister #(.N(16)) IR(.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
+    reg [15:0] I_temp; //reg
     wire [15:0] IR_Q;
+    
+    n_bitRegister #(.N(16)) IR(.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
+    
     assign IRout = IR_Q;
 
-    always @(NL/H) begin
-        case (NL/H)
+    always @(NL_H) begin
+        case (NL_H)
             0: begin
                 I_temp[15:8] = I;
             end
             1: begin
                 I_temp[7:0] = I;
             end
-            default: 
         endcase
     end
     
@@ -159,8 +180,8 @@ endmodule
 
 //Part 3
 module ALU (
-    input [3:0] FunSel, [7:0] A, [7:0] B, Cin, 
-    output [7:0] OutALU, 
+    input [3:0] FunSel, input [7:0] A, [7:0] B, Cin, 
+    output reg[7:0] OutALU, 
     output reg [3:0] OutFlag 
 );
 
@@ -212,27 +233,27 @@ module ALU (
         end
         4'b1110: begin
             OutFlag[1] <= A[7];
-            A[0] <= OutFlag[1];
-            A[1] <= A[0];
-            A[2] <= A[1];
-            A[3] <= A[2];
-            A[4] <= A[3];
-            A[5] <= A[4];
-            A[6] <= A[5];
-            A[7] <= A[6];
+            OutALU[0] <= OutFlag[1];
+            OutALU[1] <= A[0];
+            OutALU[2] <= A[1];
+            OutALU[3] <= A[2];
+            OutALU[4] <= A[3];
+            OutALU[5] <= A[4];
+            OutALU[6] <= A[5];
+            OutALU[7] <= A[6];
             
             //OutALU = {A[6:0], A[7]};
         end
         4'b1111: begin
             OutFlag[1] <= A[0];
-            A[0] <= A[1];
-            A[1] <= A[2];
-            A[2] <= A[3];
-            A[3] <= A[4];
-            A[4] <= A[5];
-            A[5] <= A[6];
-            A[6] <= A[7];
-            A[7] <= OutFlag[1];
+            OutALU[0] <= A[1];
+            OutALU[1] <= A[2];
+            OutALU[2] <= A[3];
+            OutALU[3] <= A[4];
+            OutALU[4] <= A[5];
+            OutALU[5] <= A[6];
+            OutALU[6] <= A[7];
+            OutALU[7] <= OutFlag[1];
             //OutALU = { A[0], A[7:1]};
         end
     endcase
@@ -249,10 +270,20 @@ module ALU (
             OutFlag[2] = 0;
         end
 
+        /*
         if(OutALU > 8'b11111111) begin
             OutFlag[3] = 1;
         end else begin
             OutFlag[3] = 0;
         end
+        */
+   end
 
 endmodule
+
+//Part 4
+/*
+module organization(input MuxCSel, [1:0] MuxASel,[1:0]  MuxBSel );
+
+Memory Mem(.address(), .data(), .wr(), .cs(), .);
+*/
