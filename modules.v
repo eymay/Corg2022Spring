@@ -3,13 +3,14 @@
 
 
 module n_bitRegister #(parameter N = 8) (
-    input E, [1:0] FunSel, [N-1:0] I,
+    input CLK, E, [1:0] FunSel, [N-1:0] I,
     output [N-1:0] Q
 );
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( E) begin
+    always @( posedge CLK or E) begin
+    if(E) begin
         case (FunSel)
         0: begin
             Q_temp = Q - 1;
@@ -27,6 +28,10 @@ module n_bitRegister #(parameter N = 8) (
             Q_temp = Q_temp;
         end
         endcase
+    end else begin
+    
+        Q_temp = Q;
+    end
     end
     
 endmodule
