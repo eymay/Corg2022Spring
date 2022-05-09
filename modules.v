@@ -39,17 +39,17 @@ endmodule
 //Part 2
 
 module RegFile (
-    input [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
+    input [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, CLK,
     output [7:0] OutA, [7:0] OutB
 );
     wire [7:0] R1_Q;
     wire [7:0] R2_Q;
     wire [7:0] R3_Q;
     wire [7:0] R4_Q;
-    n_bitRegister #(.N(8)) R1(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R1_Q));
-    n_bitRegister #(.N(8)) R2(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R2_Q));
-    n_bitRegister #(.N(8)) R3(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R3_Q));
-    n_bitRegister #(.N(8)) R4(.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R4_Q));
+    n_bitRegister #(.N(8)) R1(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R1_Q));
+    n_bitRegister #(.N(8)) R2(.CLK(CLK),.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R2_Q));
+    n_bitRegister #(.N(8)) R3(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R3_Q));
+    n_bitRegister #(.N(8)) R4(.CLK(CLK),.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R4_Q));
 
     //wire [3:0] R_En;
 
