@@ -190,51 +190,80 @@ module ALU (
     output reg [3:0] OutFlag 
 );
 
+reg enable_c, enable_o;
     always @(FunSel) 
     case (FunSel)
         4'b0000: begin
             OutALU = A;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b0001: begin
             OutALU = B;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b0010: begin
             OutALU = ~A;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b0011: begin
             OutALU = ~B;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b0100: begin
             OutALU = A + B;
+            enable_c = 1;
+            enable_o = 1;
         end
         4'b0101: begin
             OutALU = A + B + Cin;
+            enable_c = 1;
+            enable_o = 1;
         end
         4'b0110: begin
             OutALU = A - B;
+            enable_c = 1;
+            enable_o = 1;
         end
         4'b0111: begin
             OutALU = A & B;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b1000: begin
             OutALU = A | B;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b1001: begin
             OutALU = A ^ B;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b1010: begin
             OutFlag[1] = A[7];
             OutALU = A << 1;
+            enable_c = 1;
+            enable_o = 0;
         end
         4'b1011: begin
             OutFlag[1] = A[0];
             OutALU = A >> 1;
+            enable_c = 1;
+            enable_o = 0;
         end
         4'b1100: begin
             OutALU = A <<< 1;
+            enable_c = 0;
+            enable_o = 1;
         end
         4'b1101: begin
             OutALU = A >>> 1;
+            enable_c = 0;
+            enable_o = 0;
         end
         4'b1110: begin
             OutFlag[1] <= A[7];
@@ -246,7 +275,8 @@ module ALU (
             OutALU[5] <= A[4];
             OutALU[6] <= A[5];
             OutALU[7] <= A[6];
-            
+            enable_c = 1;
+            enable_o = 1;
             //OutALU = {A[6:0], A[7]};
         end
         4'b1111: begin
@@ -260,6 +290,8 @@ module ALU (
             OutALU[6] <= A[7];
             OutALU[7] <= OutFlag[1];
             //OutALU = { A[0], A[7:1]};
+            enable_c = 1;
+            enable_o = 1;
         end
     endcase
     always @(OutALU) begin
@@ -274,6 +306,9 @@ module ALU (
         end else begin
             OutFlag[2] = 0;
         end
+        
+        if(A[7] == ~OutALU[7] & enable_o)
+            OutFlag[3] = 1;
 
         /*
         if(OutALU > 8'b11111111) begin
@@ -287,8 +322,122 @@ module ALU (
 endmodule
 
 //Part 4
-/*
-module organization(input MuxCSel, [1:0] MuxASel,[1:0]  MuxBSel );
 
-Memory Mem(.address(), .data(), .wr(), .cs(), .);
-*/
+module Memory(
+    input wire[7:0] address,
+    input wire[7:0] data,
+    input wire wr, //Read = 0, Write = 1
+    input wire cs, //Chip is enable when cs = 0
+    input wire clock,
+    output reg[7:0] o // Output
+);
+    //Declaration o?f the RAM Area
+    reg[7:0] RAM_DATA[0:255];
+    //Read Ram data from the file
+    initial $readmemh("RAM.mem", RAM_DATA);
+    //Read the selected data from RAM
+    always @(*) begin
+        o = ~wr && ~cs ? RAM_DATA[address] : 8'hZ;
+    end
+    
+    //Write the data to RAM
+    always @(posedge clock) begin
+        if (wr && ~cs) begin
+            RAM_DATA[address] <= data; 
+        end
+    end
+endmodule
+
+
+module ALUSystem
+( input
+    [1:0] RF_OutASel, 
+    [1:0] RF_OutBSel, 
+    [1:0] RF_FunSel,
+    [3:0] RF_RegSel,
+    [3:0] ALU_FunSel,
+    [1:0] ARF_OutCSel, 
+    [1:0] ARF_OutDSel, 
+    [1:0] ARF_FunSel,
+    [2:0] ARF_RegSel,
+    IR_LH,
+    IR_Enable,
+    [1:0] IR_Funsel,
+    Mem_WR,
+    Mem_CS,
+    [1:0] MuxASel,
+    [1:0] MuxBSel,
+    MuxCSel,
+    Clock
+    );
+wire [7:0] OutALU;
+wire [7:0] Address;
+wire [7:0] MemOut;
+wire [7:0] OutC_ARF
+wire [7:0] I_ARF, IR_Out_LSB;
+Memory Mem(.address(Address), .data(OutALU), .wr(Mem_WR), .cs(Mem_CS), .clock(Clock), .o(MemOut));
+//address, data ve output 8 bit gerisi tek bit
+
+ARF arf1(.OutCSel(ARF_OutCSel), .OutDSel(ARF_OutDSel), .FunSel(ARF_FunSel), .RegSel(ARF_RegSel), .I(I_ARF) , .OutC(OutC_ARF), .OutD(Address));
+
+always @(MuxBSel) begin
+    case (MuxBSel)
+        2'b01: begin
+            I_ARF = IR_Out_LSB;
+        end
+        2'b10: begin
+            I_ARF = MemOut;
+        end
+        2'b11: begin
+            I_ARF = OutALU;
+        end
+    endcase
+end
+
+wire [15:0] IR_Out;
+
+assign IR_Out_LSB = IR_Out[7:0]
+
+IR ir1(.LH(IR_LH), .Enable(IR_Enable), .FunSel(IR_Funsel), .Out(IR_Out));
+
+wire [7:0] MuxAOut;
+
+always @(MuxASel) begin
+    case (MuxASel)
+        2'b00: begin
+            MuxAOut = IR_Out_LSB;
+        end
+        2'b01: begin
+            MuxAOut = Mem_Out;
+        end
+        2'b10: begin
+            MuxAOut = OutC_ARF;
+        end
+        2'b11: begin
+            MuxAOut = OutALU;
+        end
+end
+
+wire [7:0] RegFileOutA, RegFileOutB;
+RF rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .RegSel(RF_RegSel),  .I(MuxAOut), .A(RegFileOutA), .B(RegFileOutB));
+
+wire [7:0] MuxCOut
+always @(MuxCSel) begin
+    if (MuxCsel) begin
+        MuxCOut = RegFileOutA;
+    end else begin
+        MuxCOut = OutC_ARF;
+    end
+    
+end
+
+ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(RegFileOutB), .Out(OutALU));
+
+
+
+
+
+
+
+
+
