@@ -98,7 +98,7 @@ module RegFile (
 endmodule
 
 module ARF (
-    input [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
+    input [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,CLK,
     output [7:0] OutC, [7:0] OutD
 );
 
@@ -106,9 +106,9 @@ module ARF (
     wire [7:0] AR_Q;
     wire [7:0] SP_Q;
     
-    n_bitRegister #(.N(8)) PC(.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(PC_Q));
-    n_bitRegister #(.N(8)) AR(.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(AR_Q));
-    n_bitRegister #(.N(8)) SP(.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(SP_Q));
+    n_bitRegister #(.N(8)) PC(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(PC_Q));
+    n_bitRegister #(.N(8)) AR(.CLK(CLK),.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(AR_Q));
+    n_bitRegister #(.N(8)) SP(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(SP_Q));
 
 
 
@@ -160,13 +160,13 @@ module ARF (
 endmodule
 
 module IR (
-    input NL_H, En, [1:0] FunSel, [7:0] I,
+    input NL_H, En, [1:0] FunSel, [7:0] I,CLK,
     output [15:0] IRout
 );
     reg [15:0] I_temp; //reg
     wire [15:0] IR_Q;
     
-    n_bitRegister #(.N(16)) IR(.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
+    n_bitRegister #(.N(16)) IR(.CLK(CLK),.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
     
     assign IRout = IR_Q;
 
@@ -348,7 +348,7 @@ module Memory(
     end
 endmodule
 
-
+/*
 module ALUSystem
 ( input
     [1:0] RF_OutASel, 
@@ -373,7 +373,7 @@ module ALUSystem
 wire [7:0] OutALU;
 wire [7:0] Address;
 wire [7:0] MemOut;
-wire [7:0] OutC_ARF
+wire [7:0] OutC_ARF;
 wire [7:0] I_ARF, IR_Out_LSB;
 Memory Mem(.address(Address), .data(OutALU), .wr(Mem_WR), .cs(Mem_CS), .clock(Clock), .o(MemOut));
 //address, data ve output 8 bit gerisi tek bit
@@ -396,7 +396,7 @@ end
 
 wire [15:0] IR_Out;
 
-assign IR_Out_LSB = IR_Out[7:0]
+assign IR_Out_LSB = IR_Out[7:0];
 
 IR ir1(.LH(IR_LH), .Enable(IR_Enable), .FunSel(IR_Funsel), .Out(IR_Out));
 
@@ -416,6 +416,7 @@ always @(MuxASel) begin
         2'b11: begin
             MuxAOut = OutALU;
         end
+        
 end
 
 wire [7:0] RegFileOutA, RegFileOutB;
@@ -434,7 +435,7 @@ end
 ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(RegFileOutB), .Out(OutALU));
 
 
-
+*/
 
 
 
