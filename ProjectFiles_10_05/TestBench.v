@@ -39,7 +39,7 @@ module Project1Test();
     reg      Mem_CS;
     reg[1:0] MuxASel;
     reg[1:0] MuxBSel;
-    reg[1:0] MuxCSel;
+    reg MuxCSel;
     reg      Clock;
     
     //Test Bench Connection of ALU System
@@ -66,7 +66,7 @@ module Project1Test();
     
     //Test Vector Variables
     reg [31:0] VectorNum, Errors, TotalLine; 
-    reg [35:0] TestVectors[10000:0];
+    reg [34:0] TestVectors[10000:0];
     reg Reset, Operation;
     
     //Clock Signal Generation
@@ -77,7 +77,7 @@ module Project1Test();
     
     //Read Test Bench Values
     initial begin
-        $readmemb("alusystem_tb.mem", TestVectors); // Read vectors
+        $readmemb("TestBench.mem", TestVectors); // Read vectors
         VectorNum = 0; Errors = 0; TotalLine=0; Reset=0;// Initialize
     end
     
@@ -115,7 +115,7 @@ module Project1Test();
             
             // increment array index and read next testvector
             VectorNum = VectorNum + 1;
-            if (TestVectors[VectorNum] === 4'bx)
+            if (TestVectors[VectorNum] === 35'bx)
             begin
                 $display("%d tests completed.",
                 VectorNum);
