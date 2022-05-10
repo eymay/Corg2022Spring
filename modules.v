@@ -9,7 +9,7 @@ module n_bitRegister #(parameter N = 8) (
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( posedge CLK or E) begin
+    always @( posedge CLK ) begin
     if(E) begin
         case (FunSel)
         0: begin
@@ -39,7 +39,7 @@ endmodule
 //Part 2
 
 module RegFile (
-    input [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, CLK,
+    input CLK, [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, 
     output [7:0] OutA, [7:0] OutB
 );
     wire [7:0] R1_Q;
@@ -98,7 +98,7 @@ module RegFile (
 endmodule
 
 module ARF (
-    input [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, CLK,
+    input CLK, [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
     output [7:0] OutC, [7:0] OutD
 );
 
@@ -160,7 +160,7 @@ module ARF (
 endmodule
 
 module IR (
-    input NL_H, En, [1:0] FunSel, [7:0] I,CLK,
+    input CLK, LH, En, [1:0] FunSel, [7:0] I,
     output [15:0] IRout
 );
     reg [15:0] I_temp; //reg
@@ -170,8 +170,8 @@ module IR (
     
     assign IRout = IR_Q;
 
-    always @(NL_H) begin
-        case (NL_H)
+    always @(LH) begin
+        case (LH)
             0: begin
                 I_temp[15:8] = I;
             end
@@ -186,10 +186,10 @@ endmodule
 //Part 3
 module ALU (
     input [3:0] FunSel, input [7:0] A, [7:0] B, 
-    output reg[7:0] OutALU
+    output reg[7:0] OutALU, reg [3:0] OutFlag, CLK
 );
 
-reg [3:0] OutFlag;
+
 wire Cin;
 assign Cin = OutFlag[1];
 
@@ -297,7 +297,7 @@ reg enable_c, enable_o;
             enable_o = 1;
         end
     endcase
-    always @(OutALU) begin
+    always @(posedge CLK) begin
         if(OutALU == 0) begin
             OutFlag[0] = 1;
         end else begin
@@ -324,6 +324,156 @@ reg enable_c, enable_o;
 
 endmodule
 
+module resettable_ALU (
+    input CLK, [3:0] FunSel, input [7:0] A, [7:0] B, [1:0] Reg_FunSel,
+    output reg[7:0] OutALU, reg [3:0] OutFlag
+);
+
+
+wire Cin;
+assign Cin = OutFlag[1];
+
+reg enable_c, enable_o;
+    always @(FunSel) 
+    case (FunSel)
+        4'b0000: begin
+            OutALU = A;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b0001: begin
+            OutALU = B;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b0010: begin
+            OutALU = ~A;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b0011: begin
+            OutALU = ~B;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b0100: begin
+            OutALU = A + B;
+            enable_c = 1;
+            enable_o = 1;
+        end
+        4'b0101: begin
+            OutALU = A + B + Cin;
+            enable_c = 1;
+            enable_o = 1;
+        end
+        4'b0110: begin
+            OutALU = A - B;
+            enable_c = 1;
+            enable_o = 1;
+        end
+        4'b0111: begin
+            OutALU = A & B;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b1000: begin
+            OutALU = A | B;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b1001: begin
+            OutALU = A ^ B;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b1010: begin
+            OutFlag[1] = A[7];
+            OutALU = A << 1;
+            enable_c = 1;
+            enable_o = 0;
+        end
+        4'b1011: begin
+            OutFlag[1] = A[0];
+            OutALU = A >> 1;
+            enable_c = 1;
+            enable_o = 0;
+        end
+        4'b1100: begin
+            OutALU = A <<< 1;
+            enable_c = 0;
+            enable_o = 1;
+        end
+        4'b1101: begin
+            OutALU = A >>> 1;
+            enable_c = 0;
+            enable_o = 0;
+        end
+        4'b1110: begin
+            OutFlag[1] <= A[7];
+            OutALU[0] <= OutFlag[1];
+            OutALU[1] <= A[0];
+            OutALU[2] <= A[1];
+            OutALU[3] <= A[2];
+            OutALU[4] <= A[3];
+            OutALU[5] <= A[4];
+            OutALU[6] <= A[5];
+            OutALU[7] <= A[6];
+            enable_c = 1;
+            enable_o = 1;
+            //OutALU = {A[6:0], A[7]};
+        end
+        4'b1111: begin
+            OutFlag[1] <= A[0];
+            OutALU[0] <= A[1];
+            OutALU[1] <= A[2];
+            OutALU[2] <= A[3];
+            OutALU[3] <= A[4];
+            OutALU[4] <= A[5];
+            OutALU[5] <= A[6];
+            OutALU[6] <= A[7];
+            OutALU[7] <= OutFlag[1];
+            //OutALU = { A[0], A[7:1]};
+            enable_c = 1;
+            enable_o = 1;
+        end
+    endcase
+    reg En;
+    always @(posedge CLK) begin
+    
+        if(Reg_FunSel == 2'b11) begin
+             OutFlag <= 4'b0000;
+             En <= 0;
+             
+        end else begin
+            En <= 1;
+         end
+        
+     if(En) begin   
+        if(OutALU == 0) begin
+            OutFlag[0] = 1;
+        end else begin
+            OutFlag[0] = 0;
+        end
+
+        if(OutALU[7] == 1) begin
+            OutFlag[2] = 1;
+        end else begin
+            OutFlag[2] = 0;
+        end
+        
+        if(A[7] == ~OutALU[7] & enable_o)
+            OutFlag[3] = 1;
+     end
+        /*
+        if(OutALU > 8'b11111111) begin
+            OutFlag[3] = 1;
+        end else begin
+            OutFlag[3] = 0;
+        end
+        */
+   end
+
+endmodule
 //Part 4
 
 module Memory(
@@ -373,36 +523,36 @@ module ALUSystem
     MuxCSel,
     Clock
     );
-wire [7:0] OutALU;
+wire [7:0] ALUOut;
 wire [7:0] Address;
-wire [7:0] MemOut;
-wire [7:0] OutC_ARF;
-reg [7:0] I_ARF;
+wire [7:0] MemoryOut;
+wire [7:0] ARF_COut;
+reg [7:0] MuxBOut;
 wire [7:0] IR_Out_LSB;
-Memory Mem(.address(Address), .data(OutALU), .wr(Mem_WR), .cs(Mem_CS), .clock(Clock), .o(MemOut));
+Memory Mem(.address(Address), .data(ALUOut), .wr(Mem_WR), .cs(Mem_CS), .clock(Clock), .o(MemoryOut));
 //address, data ve output 8 bit gerisi tek bit
 
-ARF arf1(.OutCSel(ARF_OutCSel), .OutDSel(ARF_OutDSel), .FunSel(ARF_FunSel), .RegSel(ARF_RegSel), .I(I_ARF) , .OutC(OutC_ARF), .OutD(Address));
+ARF arf1(.OutCSel(ARF_OutCSel), .OutDSel(ARF_OutDSel), .FunSel(ARF_FunSel), .RegSel(ARF_RegSel), .I(MuxBOut) , .OutC(ARF_COut), .OutD(Address), .CLK(Clock));
 
 always @(MuxBSel) begin
     case (MuxBSel)
         2'b01: begin
-            I_ARF <= IR_Out_LSB;
+            MuxBOut <= IR_Out_LSB;
         end
         2'b10: begin
-            I_ARF <= MemOut;
+            MuxBOut <= MemoryOut;
         end
         2'b11: begin
-            I_ARF <= OutALU;
+            MuxBOut <= ALUOut;
         end
     endcase
 end
 
-wire [15:0] IR_Out;
+wire [15:0] IROut;
 
-assign IR_Out_LSB = IR_Out[7:0];
+assign IR_Out_LSB = IROut[7:0];
 
-IR ir1(.LH(IR_LH), .Enable(IR_Enable), .FunSel(IR_Funsel), .Out(IR_Out));
+IR ir1(.LH(IR_LH), .En(IR_Enable), .FunSel(IR_Funsel), .IRout(IROut), .CLK(Clock));
 
 reg [7:0] MuxAOut;
 
@@ -412,31 +562,31 @@ always @(MuxASel) begin
             MuxAOut = IR_Out_LSB;
         end
         2'b01: begin
-            MuxAOut = MemOut;
+            MuxAOut = MemoryOut;
         end
         2'b10: begin
-            MuxAOut = OutC_ARF;
+            MuxAOut = ARF_COut;
         end
         2'b11: begin
-            MuxAOut = OutALU;
+            MuxAOut = ALUOut;
         end
     endcase
 end
 
-wire [7:0] RegFileOutA, RegFileOutB;
-RF rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .RegSel(RF_RegSel),  .I(MuxAOut), .A(RegFileOutA), .B(RegFileOutB));
+wire [7:0] AOut, BOut;
+RegFile rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .RegSel(RF_RegSel),  .I(MuxAOut), .OutA(AOut), .OutB(BOut),.CLK(Clock));
 
 reg [7:0] MuxCOut;
 always @(MuxCSel) begin
     if (MuxCSel) begin
-        MuxCOut = RegFileOutA;
+        MuxCOut = AOut;
     end else begin
-        MuxCOut = OutC_ARF;
+        MuxCOut = ARF_COut;
     end
     
 end
-
-ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(RegFileOutB), .Out(OutALU));
+wire [3:0] ALUOutFlag;
+resettable_ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(ALUOutFlag), .CLK(Clock), .Reg_FunSel(RF_FunSel));
 
 endmodule
 
