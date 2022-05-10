@@ -98,7 +98,7 @@ module RegFile (
 endmodule
 
 module ARF (
-    input [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,CLK,
+    input [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, CLK,
     output [7:0] OutC, [7:0] OutD
 );
 
@@ -185,10 +185,13 @@ endmodule
 
 //Part 3
 module ALU (
-    input [3:0] FunSel, input [7:0] A, [7:0] B, Cin, 
-    output reg[7:0] OutALU, 
-    output reg [3:0] OutFlag 
+    input [3:0] FunSel, input [7:0] A, [7:0] B, 
+    output reg[7:0] OutALU
 );
+
+reg [3:0] OutFlag;
+wire Cin;
+assign Cin = OutFlag[1];
 
 reg enable_c, enable_o;
     always @(FunSel) 
@@ -348,7 +351,7 @@ module Memory(
     end
 endmodule
 
-/*
+
 module ALUSystem
 ( input
     [1:0] RF_OutASel, 
@@ -374,7 +377,8 @@ wire [7:0] OutALU;
 wire [7:0] Address;
 wire [7:0] MemOut;
 wire [7:0] OutC_ARF;
-wire [7:0] I_ARF, IR_Out_LSB;
+reg [7:0] I_ARF;
+wire [7:0] IR_Out_LSB;
 Memory Mem(.address(Address), .data(OutALU), .wr(Mem_WR), .cs(Mem_CS), .clock(Clock), .o(MemOut));
 //address, data ve output 8 bit gerisi tek bit
 
@@ -383,13 +387,13 @@ ARF arf1(.OutCSel(ARF_OutCSel), .OutDSel(ARF_OutDSel), .FunSel(ARF_FunSel), .Reg
 always @(MuxBSel) begin
     case (MuxBSel)
         2'b01: begin
-            I_ARF = IR_Out_LSB;
+            I_ARF <= IR_Out_LSB;
         end
         2'b10: begin
-            I_ARF = MemOut;
+            I_ARF <= MemOut;
         end
         2'b11: begin
-            I_ARF = OutALU;
+            I_ARF <= OutALU;
         end
     endcase
 end
@@ -400,7 +404,7 @@ assign IR_Out_LSB = IR_Out[7:0];
 
 IR ir1(.LH(IR_LH), .Enable(IR_Enable), .FunSel(IR_Funsel), .Out(IR_Out));
 
-wire [7:0] MuxAOut;
+reg [7:0] MuxAOut;
 
 always @(MuxASel) begin
     case (MuxASel)
@@ -408,7 +412,7 @@ always @(MuxASel) begin
             MuxAOut = IR_Out_LSB;
         end
         2'b01: begin
-            MuxAOut = Mem_Out;
+            MuxAOut = MemOut;
         end
         2'b10: begin
             MuxAOut = OutC_ARF;
@@ -416,15 +420,15 @@ always @(MuxASel) begin
         2'b11: begin
             MuxAOut = OutALU;
         end
-        
+    endcase
 end
 
 wire [7:0] RegFileOutA, RegFileOutB;
 RF rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .RegSel(RF_RegSel),  .I(MuxAOut), .A(RegFileOutA), .B(RegFileOutB));
 
-wire [7:0] MuxCOut
+reg [7:0] MuxCOut;
 always @(MuxCSel) begin
-    if (MuxCsel) begin
+    if (MuxCSel) begin
         MuxCOut = RegFileOutA;
     end else begin
         MuxCOut = OutC_ARF;
@@ -434,8 +438,8 @@ end
 
 ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(RegFileOutB), .Out(OutALU));
 
+endmodule
 
-*/
 
 
 
