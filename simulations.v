@@ -195,52 +195,57 @@ module IR_Test();
                 FunSelect = i;
                 $display("FunSelect: %0d",i);
             end
-         end
-         
-          
-         
-         
+         end    
     end
-
-
 
 endmodule 
 
-module test_alu();
-    reg [7:0] A, B;
-    reg [3:0] FunSel;
-    reg [1:0] Reg_FunSel;
-    reg CLK;
-    wire [7:0] OutALU;
-    wire [3:0] OutFlag;
 
-    ALU uut(CLK, FunSel, A, B, OutALU, OutFlag);
+module ALU_test
+    reg[3:0] FunSelect;
+    reg[7:0] A;
+    reg[7:0] B;
     
-    always #1 CLK = ~CLK;
-    initial begin
-        Reg_FunSel = 2'b11;
-        CLK = 0;
-        #5
-        Reg_FunSel = 2'b01;
-        
-        A = 8'b1010_1111; B = 8'b0111_1101; FunSel = 4'b0000; #100;
-
-        FunSel = 4'b0001; #100;
-
-        FunSel = 4'b0010; #100;
-
-        FunSel = 4'b0011; #100;
-
-        FunSel = 4'b0111; #100;
-
-        FunSel = 4'b1000; #100;
-
-        FunSel = 4'b1001; #100;
-        $finish;
-    end
-
+    wire[7:0] OutALU;
+    wire[3:0] OutFlag;
+    wire CLK;
+    
+    ALU testbench(.Funsel(FunSelect),.A(A),.B(B));
+    CLK = OutFlag[2];
+    
+    
 endmodule
 
+module resettbale_ALU_test(FunSelect);
+    
+    reg CLK;
+    reg[3:0] FunSelect;
+    reg[7:0] A;
+    reg[7:0] B;
+    reg[1:0] Reg_FunSelect;
+    
+    wire[7:0] OutALU;
+    wire[3:0] OutFlag;
+    
+    integer i;
+    
+    resettable_ALU test(.CLK(CLK),.Funsel(FunSelect),.A(A),.B(B),.Reg_FunSel(Reg_FunSelect));
+    always #1 CLK = ~CLK;
+    initial begin
+        FunSelect = 4'b0000;
+        CLK = 0;
+        forever begin
+            #5
+            for(i=0; i < 16; i = i + 1) begin
+                #10
+                FunSelect = FunSelect + 1;
+                $display("FunSelect: %0d",FunSelect);
+            end
+        end    
+    end
+    
+endmodule    
+    
 module Project1Test();
     //Input Registers of ALUSystem
     reg[1:0] RF_OutASel; 
