@@ -9,7 +9,7 @@ module n_bitRegister #(parameter N = 8) (
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( posedge CLK ) begin
+    always @( negedge CLK ) begin
     if(E) begin
         case (FunSel)
         0: begin
@@ -185,8 +185,8 @@ endmodule
 
 //Part 3
 module ALU (
-    input [3:0] FunSel, input [7:0] A, [7:0] B, 
-    output reg[7:0] OutALU, reg [3:0] OutFlag, CLK
+    input CLK, [3:0] FunSel, input [7:0] A, [7:0] B, 
+    output reg[7:0] OutALU, reg [3:0] OutFlag = 4'b0
 );
 
 
@@ -297,7 +297,7 @@ reg enable_c, enable_o;
             enable_o = 1;
         end
     endcase
-    always @(posedge CLK) begin
+    always @(negedge CLK) begin
         if(OutALU == 0) begin
             OutFlag[0] = 1;
         end else begin
@@ -438,7 +438,7 @@ reg enable_c, enable_o;
         end
     endcase
     reg En;
-    always @(posedge CLK) begin
+    always @(negedge CLK) begin
     
         if(Reg_FunSel == 2'b11) begin
              OutFlag <= 4'b0000;
