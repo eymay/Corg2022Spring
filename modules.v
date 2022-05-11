@@ -9,7 +9,7 @@ module n_bitRegister #(parameter N = 8) (
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( negedge CLK ) begin
+    always @( posedge CLK ) begin
     if(E) begin
         case (FunSel)
         0: begin
@@ -186,135 +186,122 @@ endmodule
 //Part 3
 module ALU (
     input CLK, [3:0] FunSel, input [7:0] A, [7:0] B, 
-    output reg[7:0] OutALU, reg [3:0] OutFlag = 4'b0
+    output [7:0] OutALU, reg [3:0] OutFlag = 4'b0
 );
 
 
 wire Cin;
-assign Cin = OutFlag[1];
-
-reg enable_c, enable_o;
-    always @(FunSel) 
+reg [7:0] ALU_result;
+assign Cin = OutFlag[2];
+assign OutALU = ALU_result;
+reg  enable_o;
+    always @(*) begin 
     case (FunSel)
         4'b0000: begin
-            OutALU = A;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= A;
+            enable_o <= 0;
         end
         4'b0001: begin
-            OutALU = B;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= B;
+            enable_o <= 0;
         end
         4'b0010: begin
-            OutALU = ~A;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= ~A;
+            enable_o <= 0;
         end
         4'b0011: begin
-            OutALU = ~B;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= ~B;
+            enable_o <= 0;
         end
         4'b0100: begin
-            OutALU = A + B;
-            enable_c = 1;
-            enable_o = 1;
+            ALU_result <= A + B;
+            enable_o <= 1;
         end
         4'b0101: begin
-            OutALU = A + B + Cin;
-            enable_c = 1;
-            enable_o = 1;
+            ALU_result <= A + B + Cin;
+            enable_o <= 1;
         end
         4'b0110: begin
-            OutALU = A - B;
-            enable_c = 1;
-            enable_o = 1;
+            ALU_result <= A - B;
+            enable_o <= 1;
         end
         4'b0111: begin
-            OutALU = A & B;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= A & B;
+            enable_o <= 0;
         end
         4'b1000: begin
-            OutALU = A | B;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= A | B;
+            enable_o <= 0;
         end
         4'b1001: begin
-            OutALU = A ^ B;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= A ^ B;
+            enable_o <= 0;
         end
         4'b1010: begin
-            OutFlag[1] = A[7];
-            OutALU = A << 1;
-            enable_c = 1;
-            enable_o = 0;
+            OutFlag[2] <= A[7];
+            ALU_result <= A << 1;
+            enable_o <= 0;
         end
         4'b1011: begin
-            OutFlag[1] = A[0];
-            OutALU = A >> 1;
-            enable_c = 1;
-            enable_o = 0;
+            OutFlag[2] <= A[0];
+            ALU_result <= A >> 1;
+            enable_o <= 0;
         end
         4'b1100: begin
-            OutALU = A <<< 1;
-            enable_c = 0;
-            enable_o = 1;
+            ALU_result <= A <<< 1;
+            enable_o <= 1;
         end
         4'b1101: begin
-            OutALU = A >>> 1;
-            enable_c = 0;
-            enable_o = 0;
+            ALU_result <= A >>> 1;
+            enable_o <= 0;
         end
         4'b1110: begin
-            OutFlag[1] <= A[7];
-            OutALU[0] <= OutFlag[1];
-            OutALU[1] <= A[0];
-            OutALU[2] <= A[1];
-            OutALU[3] <= A[2];
-            OutALU[4] <= A[3];
-            OutALU[5] <= A[4];
-            OutALU[6] <= A[5];
-            OutALU[7] <= A[6];
-            enable_c = 1;
+            OutFlag[2] <= A[7];
+            ALU_result[0] <= OutFlag[2];
+            ALU_result[1] <= A[0];
+            ALU_result[2] <= A[1];
+            ALU_result[3] <= A[2];
+            ALU_result[4] <= A[3];
+            ALU_result[5] <= A[4];
+            ALU_result[6] <= A[5];
+            ALU_result[7] <= A[6];
             enable_o = 1;
-            //OutALU = {A[6:0], A[7]};
+            //ALU_result = {A[6:0], A[7]};
         end
         4'b1111: begin
-            OutFlag[1] <= A[0];
-            OutALU[0] <= A[1];
-            OutALU[1] <= A[2];
-            OutALU[2] <= A[3];
-            OutALU[3] <= A[4];
-            OutALU[4] <= A[5];
-            OutALU[5] <= A[6];
-            OutALU[6] <= A[7];
-            OutALU[7] <= OutFlag[1];
-            //OutALU = { A[0], A[7:1]};
-            enable_c = 1;
+            OutFlag[2] <= A[0];
+            ALU_result[0] <= A[1];
+            ALU_result[1] <= A[2];
+            ALU_result[2] <= A[3];
+            ALU_result[3] <= A[4];
+            ALU_result[4] <= A[5];
+            ALU_result[5] <= A[6];
+            ALU_result[6] <= A[7];
+            ALU_result[7] <= OutFlag[2];
+            //ALU_result = { A[0], A[7:1]};
+
             enable_o = 1;
         end
     endcase
+    end
     always @(negedge CLK) begin
-        if(OutALU == 0) begin
-            OutFlag[0] = 1;
+        if(ALU_result == 0) begin
+            OutFlag[3] = 1;
         end else begin
-            OutFlag[0] = 0;
+            OutFlag[3] = 0;
         end
 
-        if(OutALU[7] == 1) begin
-            OutFlag[2] = 1;
+        if(ALU_result[7] == 1) begin
+            OutFlag[1] = 1;
         end else begin
-            OutFlag[2] = 0;
+            OutFlag[1] = 0;
         end
         
-        if(A[7] == ~OutALU[7] & enable_o)
-            OutFlag[3] = 1;
+        if((A[7] == ~ALU_result[7]) && (enable_o))
+            OutFlag[0] = 1;
 
         /*
-        if(OutALU > 8'b11111111) begin
+        if(ALU_result > 8'b11111111) begin
             OutFlag[3] = 1;
         end else begin
             OutFlag[3] = 0;
@@ -324,156 +311,7 @@ reg enable_c, enable_o;
 
 endmodule
 
-module resettable_ALU (
-    input CLK, [3:0] FunSel, input [7:0] A, [7:0] B, [1:0] Reg_FunSel,
-    output reg[7:0] OutALU, reg [3:0] OutFlag
-);
 
-
-wire Cin;
-assign Cin = OutFlag[1];
-
-reg enable_c, enable_o;
-    always @(FunSel) 
-    case (FunSel)
-        4'b0000: begin
-            OutALU = A;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b0001: begin
-            OutALU = B;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b0010: begin
-            OutALU = ~A;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b0011: begin
-            OutALU = ~B;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b0100: begin
-            OutALU = A + B;
-            enable_c = 1;
-            enable_o = 1;
-        end
-        4'b0101: begin
-            OutALU = A + B + Cin;
-            enable_c = 1;
-            enable_o = 1;
-        end
-        4'b0110: begin
-            OutALU = A - B;
-            enable_c = 1;
-            enable_o = 1;
-        end
-        4'b0111: begin
-            OutALU = A & B;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b1000: begin
-            OutALU = A | B;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b1001: begin
-            OutALU = A ^ B;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b1010: begin
-            OutFlag[1] = A[7];
-            OutALU = A << 1;
-            enable_c = 1;
-            enable_o = 0;
-        end
-        4'b1011: begin
-            OutFlag[1] = A[0];
-            OutALU = A >> 1;
-            enable_c = 1;
-            enable_o = 0;
-        end
-        4'b1100: begin
-            OutALU = A <<< 1;
-            enable_c = 0;
-            enable_o = 1;
-        end
-        4'b1101: begin
-            OutALU = A >>> 1;
-            enable_c = 0;
-            enable_o = 0;
-        end
-        4'b1110: begin
-            OutFlag[1] <= A[7];
-            OutALU[0] <= OutFlag[1];
-            OutALU[1] <= A[0];
-            OutALU[2] <= A[1];
-            OutALU[3] <= A[2];
-            OutALU[4] <= A[3];
-            OutALU[5] <= A[4];
-            OutALU[6] <= A[5];
-            OutALU[7] <= A[6];
-            enable_c = 1;
-            enable_o = 1;
-            //OutALU = {A[6:0], A[7]};
-        end
-        4'b1111: begin
-            OutFlag[1] <= A[0];
-            OutALU[0] <= A[1];
-            OutALU[1] <= A[2];
-            OutALU[2] <= A[3];
-            OutALU[3] <= A[4];
-            OutALU[4] <= A[5];
-            OutALU[5] <= A[6];
-            OutALU[6] <= A[7];
-            OutALU[7] <= OutFlag[1];
-            //OutALU = { A[0], A[7:1]};
-            enable_c = 1;
-            enable_o = 1;
-        end
-    endcase
-    reg En;
-    always @(negedge CLK) begin
-    
-        if(Reg_FunSel == 2'b11) begin
-             OutFlag <= 4'b0000;
-             En <= 0;
-             
-        end else begin
-            En <= 1;
-         end
-        
-     if(En) begin   
-        if(OutALU == 0) begin
-            OutFlag[0] = 1;
-        end else begin
-            OutFlag[0] = 0;
-        end
-
-        if(OutALU[7] == 1) begin
-            OutFlag[2] = 1;
-        end else begin
-            OutFlag[2] = 0;
-        end
-        
-        if(A[7] == ~OutALU[7] & enable_o)
-            OutFlag[3] = 1;
-     end
-        /*
-        if(OutALU > 8'b11111111) begin
-            OutFlag[3] = 1;
-        end else begin
-            OutFlag[3] = 0;
-        end
-        */
-   end
-
-endmodule
 //Part 4
 
 module Memory(
@@ -586,7 +424,7 @@ always @(MuxCSel) begin
     
 end
 wire [3:0] ALUOutFlag;
-resettable_ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(ALUOutFlag), .CLK(Clock), .Reg_FunSel(RF_FunSel));
+ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(ALUOutFlag), .CLK(Clock));
 
 endmodule
 

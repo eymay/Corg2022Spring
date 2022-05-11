@@ -22,26 +22,7 @@ module Register_Test();
      En = 1;
      CLK = 0;
      
-         /*
-            $display("Enable:%0d ", E );
-        
-        E =1;
-        for(f = 0; f<3'b100; f = f+1) begin
-        #10;
-            FunSel = f;
-            $display("FunSel:%0d ", f );
-        end
-        #5;
-       
-        E =0;
-        #5;
-         $display("Enable:%0d ", E );
-         for(f = 0; f<3'b100; f = f+1) begin
-                 #10;
-                     FunSel = f;
-                     $display("FunSel:%0d ", f );
-                 end
-            */
+
             
      forever
                 begin 
@@ -82,11 +63,11 @@ module RegFile_Test();
     wire [7:0] OutputB;
     
      //integer e, f, i;    
-     reg [3:0] r = 4'b0000;
-     reg [1:0] f = 2'b00;
+     //reg [3:0] r = 4'b0000;
+     //reg [1:0] f = 2'b00;
      
-     reg [7:0] i = 8'b00000000;
-     reg [1:0] o = 2'b00;
+     //reg [7:0] i = 8'b00000000;
+     //reg [1:0] o = 2'b00;
     integer a,j,k;
     RegFile file(.OutASel(OutASelect),.OutBSel(OutBSelect),.FunSel(FunSelect),.RegSel(RegisterSelect),.I(Input),.CLK(CLK),.OutA(OutputA),.OutB(OutputB));
     always #1 CLK = ~CLK;
@@ -125,17 +106,17 @@ module ARF_Test();
     reg [7:0] Input;
     reg [1:0] OutCSelect;
     reg [1:0] OutDSelect;
-    reg [3:0] RegisterSelect;
+    reg [2:0] RegisterSelect;
     
     wire [7:0] OutputC;
     wire [7:0] OutputD;
     
      //integer e, f, i;    
-     reg [3:0] r = 4'b0000;
-     reg [1:0] f = 2'b00;
+     //reg [3:0] r = 4'b0000;
+     //reg [1:0] f = 2'b00;
      
-     reg [7:0] i = 8'b00000000;
-     reg [1:0] o = 2'b00;
+     //reg [7:0] i = 8'b00000000;
+     //reg [1:0] o = 2'b00;
     integer a,j,k;
 
     ARF file(.OutCSel(OutCSelect),.OutDSel(OutDSelect),.FunSel(FunSelect),.RegSel(RegisterSelect),.I(Input),.CLK(CLK),.OutC(OutputC),.OutD(OutputD));
@@ -145,7 +126,7 @@ module ARF_Test();
      #5
      Input = 8'b10101010;
      CLK = 0;
-     for(a=0;a<16;a=a+1) begin
+     for(a=0;a<8;a=a+1) begin
         RegisterSelect = a;
         $display("RegisterSelect: %0d",a);
         for(j=0;j<4;j=j+1) begin
@@ -176,10 +157,10 @@ module IR_Test();
     
     wire [15:0] Out;
     
-    integer i,j,k;
+    integer i;
     
-    IR Ir(.NL_H(LH),.En(E),.FunSel(FunSelect),.I(Input),.CLK(CLK));
-    always #1 CLK = ~CLK;
+    IR Ir(.LH(LH),.En(E),.FunSel(FunSelect),.I(Input),.CLK(CLK), .IRout(Out));
+    always #5 CLK = ~CLK;
     always #50 E = ~E;
     always #100 LH = ~LH;
     
@@ -200,8 +181,8 @@ module IR_Test();
 
 endmodule 
 
-
-module ALU_test
+/*
+module ALU_test();
     reg[3:0] FunSelect;
     reg[7:0] A;
     reg[7:0] B;
@@ -215,34 +196,46 @@ module ALU_test
     
     
 endmodule
-
-module resettbale_ALU_test(FunSelect);
+*/
+module ALU_test();
     
     reg CLK;
     reg[3:0] FunSelect;
     reg[7:0] A;
     reg[7:0] B;
-    reg[1:0] Reg_FunSelect;
+
     
     wire[7:0] OutALU;
     wire[3:0] OutFlag;
     
     integer i;
     
-    resettable_ALU test(.CLK(CLK),.Funsel(FunSelect),.A(A),.B(B),.Reg_FunSel(Reg_FunSelect));
-    always #1 CLK = ~CLK;
+    ALU test(.CLK(CLK),.FunSel(FunSelect),.A(A),.B(B), .OutFlag(OutFlag), .OutALU(OutALU));
+    always #5 CLK = ~CLK;
     initial begin
         FunSelect = 4'b0000;
-        CLK = 0;
-        forever begin
-            #5
-            for(i=0; i < 16; i = i + 1) begin
-                #10
-                FunSelect = FunSelect + 1;
-                $display("FunSelect: %0d",FunSelect);
-            end
-        end    
+        A = 0;
+        B = 0;
+        CLK = 1;
+        
+        #170
+        A = 8'b10101011;
+        B = 8'b10110111;
+        
+        #170
+        A = 8'b11111111;
+        B = 8'b11111111;
+         
     end
+    
+    always begin
+                #5
+                for(i=0; i < 16; i = i + 1) begin
+                    #10
+                    FunSelect = FunSelect + 1;
+                    $display("FunSelect: %0d",FunSelect);
+                end
+            end   
     
 endmodule    
     
@@ -337,7 +330,7 @@ module Project1Test();
             $display("Memory Out: %d", _ALUSystem.MemoryOut);            
             $display("Instruction Register: IROut: %d", _ALUSystem.IROut);            
             $display("MuxAOut: %d, MuxBOut: %d, MuxCOut: %d", _ALUSystem.MuxAOut, _ALUSystem.MuxBOut, _ALUSystem.MuxCOut);
-            
+            $display("");
             // increment array index and read next testvector
             VectorNum = VectorNum + 1;
             if (TestVectors[VectorNum] === 35'bx)
