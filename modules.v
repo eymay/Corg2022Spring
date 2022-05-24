@@ -9,7 +9,7 @@ module n_bitRegister #(parameter N = 8) (
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( posedge CLK ) begin
+    always @( negedge CLK ) begin
     if(E) begin
         case (FunSel)
         0: begin
@@ -46,17 +46,17 @@ module RegFile (
     wire [7:0] R2_Q;
     wire [7:0] R3_Q;
     wire [7:0] R4_Q;
-    n_bitRegister #(.N(8)) R1(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R1_Q));
-    n_bitRegister #(.N(8)) R2(.CLK(CLK),.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R2_Q));
-    n_bitRegister #(.N(8)) R3(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R3_Q));
-    n_bitRegister #(.N(8)) R4(.CLK(CLK),.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R4_Q));
+    n_bitRegister #(.N(8)) R1(.CLK(CLK),.E(~RegSel[3]), .FunSel(FunSel), .I(I), .Q(R1_Q));
+    n_bitRegister #(.N(8)) R2(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(R2_Q));
+    n_bitRegister #(.N(8)) R3(.CLK(CLK),.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(R3_Q));
+    n_bitRegister #(.N(8)) R4(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(R4_Q));
 
     //wire [3:0] R_En;
 
     reg [7:0] OutA_temp, OutB_temp;
     assign OutA = OutA_temp;
     assign OutB = OutB_temp;
-    always@(OutASel) begin
+    always@(*) begin
         case (OutASel)
         0: begin
             OutA_temp = R1_Q;
@@ -75,7 +75,7 @@ module RegFile (
         end
         endcase
     end
-    always@(OutBSel) begin
+    always@(*) begin
         case (OutBSel)
         0: begin
             OutB_temp = R1_Q;
@@ -106,9 +106,9 @@ module ARF (
     wire [7:0] AR_Q;
     wire [7:0] SP_Q;
     
-    n_bitRegister #(.N(8)) PC(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(PC_Q));
+    n_bitRegister #(.N(8)) PC(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(PC_Q));
     n_bitRegister #(.N(8)) AR(.CLK(CLK),.E(~RegSel[1]), .FunSel(FunSel), .I(I), .Q(AR_Q));
-    n_bitRegister #(.N(8)) SP(.CLK(CLK),.E(~RegSel[2]), .FunSel(FunSel), .I(I), .Q(SP_Q));
+    n_bitRegister #(.N(8)) SP(.CLK(CLK),.E(~RegSel[0]), .FunSel(FunSel), .I(I), .Q(SP_Q));
 
 
 
@@ -116,7 +116,7 @@ module ARF (
     assign OutC = OutC_temp;
     assign OutD = OutD_temp;
 
-    always@(OutCSel) begin
+    always@(*) begin
         case (OutCSel)
         0: begin
             OutC_temp = PC_Q;
@@ -136,7 +136,7 @@ module ARF (
         endcase
     end
 
-    always@(OutDSel) begin
+    always@(*) begin
         case (OutDSel)
         0: begin
             OutD_temp = PC_Q;
@@ -168,8 +168,9 @@ module IR (
     
     n_bitRegister #(.N(16)) IR(.CLK(CLK),.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
     
-    assign IRout = IR_Q;
-
+    assign IRout = LH ? I_temp[15:8] : I_temp[7:0];
+    
+    /*
     always @(LH) begin
         case (LH)
             0: begin
@@ -180,7 +181,7 @@ module IR (
             end
         endcase
     end
-    
+    */
 endmodule
 
 //Part 3
@@ -372,7 +373,7 @@ Memory Mem(.address(Address), .data(ALUOut), .wr(Mem_WR), .cs(Mem_CS), .clock(Cl
 
 ARF arf1(.OutCSel(ARF_OutCSel), .OutDSel(ARF_OutDSel), .FunSel(ARF_FunSel), .RegSel(ARF_RegSel), .I(MuxBOut) , .OutC(ARF_COut), .OutD(Address), .CLK(Clock));
 
-always @(MuxBSel) begin
+always @(*) begin
     case (MuxBSel)
         2'b01: begin
             MuxBOut <= IR_Out_LSB;
@@ -394,7 +395,7 @@ IR ir1(.LH(IR_LH), .En(IR_Enable), .FunSel(IR_Funsel), .IRout(IROut), .CLK(Clock
 
 reg [7:0] MuxAOut;
 
-always @(MuxASel) begin
+always @(*) begin
     case (MuxASel)
         2'b00: begin
             MuxAOut = IR_Out_LSB;
@@ -414,7 +415,10 @@ end
 wire [7:0] AOut, BOut;
 RegFile rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .RegSel(RF_RegSel),  .I(MuxAOut), .OutA(AOut), .OutB(BOut),.CLK(Clock));
 
-reg [7:0] MuxCOut;
+wire [7:0] MuxCOut;
+
+assign MuxCOut = MuxCSel ? AOut: ARF_COut;
+/*
 always @(MuxCSel) begin
     if (MuxCSel) begin
         MuxCOut = AOut;
@@ -423,6 +427,7 @@ always @(MuxCSel) begin
     end
     
 end
+*/
 wire [3:0] ALUOutFlag;
 ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(ALUOutFlag), .CLK(Clock));
 
