@@ -346,6 +346,7 @@ module control_unit (
 input [3:0] opcode,
 input [3:0] ir_11_8,
 input [7:0] ir_7_0,
+input [3:0] ALU_OutFlag,
 output 
     reg [1:0] RF_OutASel, 
     reg [1:0] RF_OutBSel, 
@@ -403,6 +404,9 @@ output
         2'b11: RF_RegSel = 4'b1110;        
         endcase
         end 
+        
+        
+        
         /*else begin
          RF_RegSel = 4'b1111; // disable registers 
         end */
@@ -576,10 +580,25 @@ output
                 ALU_FunSel = 4'b1011; //  >>A
                 end
             2'h0B:begin // PUL
-                
+                RF_OutBSel = RegSel;
+                ALU_FunSel = 4'b0001; //pass B
+                ARF_OutDSel = 2'b11; // select SP
+                Mem_CS = 0;
+                Mem_WR = 1;
+                //,
+                ARF_RegSel = 3'b110;
+                ARF_FunSel = 2'b00;
                 end
             2'h0C:begin //PSH
+                ARF_RegSel = 3'b110;
+                ARF_FunSel = 2'b01;
                 
+                ARF_OutDSel = 2'b11; // select SP
+                Mem_CS = 0;
+                Mem_WR = 0;
+                MuxASel = 2'b01; //memory output
+                
+                RF_FunSel = 2'b10;
                 end
             2'h0D:begin //INC
                 ALU_FunSel = 4'b0000; //load A
@@ -588,7 +607,11 @@ output
                 ALU_FunSel = 4'b0000; //load A
                 end
             2'h0F:begin // BNE
-                
+                    if (ALU_OutFlag[3] == 0) begin
+                        MuxBSel = AddressMode ? 2'b01 : 2'b10;
+                        ARF_FunSel = 2'b10;
+                        ARF_RegSel = 3'b011;
+                    end
                 end
         
         
