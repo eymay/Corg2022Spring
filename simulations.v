@@ -193,6 +193,19 @@ module ALU_test();
     
     ALU testbench(.Funsel(FunSelect),.A(A),.B(B));
     CLK = OutFlag[2];
+    initial begin
+        FunSelect = 4'b0000;
+        CLK = 0;
+        forever begin
+            #5
+            for(i=0; i < 16; i = i + 1) begin
+                #10
+                CLK = OutFlag[2];
+                FunSelect = FunSelect + 1;
+                $display("FunSelect: %0d",FunSelect);
+            end
+        end    
+    end
     
     
 endmodule
