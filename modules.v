@@ -9,7 +9,7 @@ module n_bitRegister #(parameter N = 8) (
 
     reg [N-1:0] Q_temp;
     assign Q = Q_temp;
-    always @( negedge CLK ) begin
+    always @( posedge CLK ) begin
     if(E) begin
         case (FunSel)
         0: begin
@@ -164,14 +164,14 @@ module IR (
     output [15:0] IRout
 );
     reg [15:0] I_temp; //reg
-    wire [15:0] IR_Q;
+    //wire [15:0] IR_Q;
     
-    n_bitRegister #(.N(16)) IR(.CLK(CLK),.E(En), .FunSel(FunSel), .I(I_temp), .Q(IR_Q));
+    n_bitRegister #(.N(16)) IR(.CLK(CLK),.E(En), .FunSel(FunSel), .I(I_temp), .Q(IRout));
     
-    assign IRout = LH ? I_temp[15:8] : I_temp[7:0];
+    //assign IRout = LH ? I_temp[15:8] : I_temp[7:0];
     
-    /*
-    always @(LH) begin
+    
+    always @(*) begin
         case (LH)
             0: begin
                 I_temp[15:8] = I;
@@ -181,7 +181,7 @@ module IR (
             end
         endcase
     end
-    */
+    
 endmodule
 
 //Part 3
