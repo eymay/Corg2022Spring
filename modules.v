@@ -373,6 +373,13 @@ output
     reg [3:0] Destreg;
     reg [7:0] Value;
     reg [3:0] SRCREG1, SRCREG2;
+    
+    reg SeqCounter = 0;
+    //Fetch
+    
+    
+    
+    
     always@(*) begin
         if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
             RegSel <= ir_11_8[1:0];
@@ -394,6 +401,8 @@ output
             SRCREG1 = ir_7_0[7:4];
         end
     end
+    
+    /*
     
     always@(*) begin
         if(opcode == 2'h01 || opcode == 2'h0C) begin //enable regfile register for writing only
@@ -617,6 +626,8 @@ output
         
         endcase
     end
+    
+ */
     
     
 endmodule
