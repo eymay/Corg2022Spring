@@ -487,9 +487,9 @@ endmodule
     MuxBSel = 2'b11;
      
 `define MUX_C_ARF\
-    MuxCSel = 0
+    MuxCSel = 0;
 `define MUX_C_REG_OUTA\
-    MuxCSel = 1
+    MuxCSel = 1;
 
 `define CLR_ARF\
     ARF_RegSel = 3'b000;\ //enable 
