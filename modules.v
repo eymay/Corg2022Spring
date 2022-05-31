@@ -341,34 +341,34 @@ module Memory(
 endmodule
 
 `define  OUT_D_ARF_PC \
-    ARF_OutDSel = 2'b00
+    ARF_OutDSel = 2'b00;
 `define  OUT_C_ARF_PC \
-    ARF_OutCSel = 2'b00
+    ARF_OutCSel = 2'b00;
 `define  OUT_D_ARF_AR \
-    ARF_OutDSel = 2'b10
+    ARF_OutDSel = 2'b10;
 `define  OUT_C_ARF_AR \
-    ARF_OutCSel = 2'b10
+    ARF_OutCSel = 2'b10;
 `define  OUT_D_ARF_SP \
-    ARF_OutDSel = 2'b11
+    ARF_OutDSel = 2'b11;
 `define  OUT_C_ARF_SP \
-    ARF_OutCSel = 2'b11
+    ARF_OutCSel = 2'b11;
 
 `define OUT_A_REG1\
-    RF_OutASel = 2'b00
+    RF_OutASel = 2'b00;
 `define OUT_A_REG2\
-    RF_OutASel = 2'b01
+    RF_OutASel = 2'b01;
 `define OUT_A_REG3\
-    RF_OutASel = 2'b10
+    RF_OutASel = 2'b10;
 `define OUT_A_REG4\
-    RF_OutASel = 2'b11
+    RF_OutASel = 2'b11;
 `define OUT_B_REG1\
-    RF_OutBSel = 2'b00
+    RF_OutBSel = 2'b00;
 `define OUT_B_REG2\
-    RF_OutBSel = 2'b01
+    RF_OutBSel = 2'b01;
 `define OUT_B_REG3\
-    RF_OutBSel = 2'b10
+    RF_OutBSel = 2'b10;
 `define OUT_B_REG4\
-    RF_OutBSel = 2'b11
+    RF_OutBSel = 2'b11;
 
 
 
@@ -471,25 +471,33 @@ endmodule
     Mem_WR = 1;
 
 `define MUX_A_IROUT\
-    MuxASel = 2'b00
+    MuxASel = 2'b00;
 `define MUX_A_MEMOUT\
-    MuxASel = 2'b01
+    MuxASel = 2'b01;
 `define MUX_A_ARF_OUTC\
-    MuxASel = 2'b10
+    MuxASel = 2'b10;
 `define MUX_A_ARF_OUTALU\
-    MuxASel = 2'b11
+    MuxASel = 2'b11;
 
 `define MUX_B_IROUT\
-    MuxBSel = 2'b01
+    MuxBSel = 2'b01;
 `define MUX_B_MEMOUT\
-    MuxBSel = 2'b10
+    MuxBSel = 2'b10;
 `define MUX_B_OUTALU\
-    MuxBSel = 2'b11
+    MuxBSel = 2'b11;
      
 `define MUX_C_ARF\
     MuxCSel = 0
 `define MUX_C_REG_OUTA\
     MuxCSel = 1
+
+`define CLR_ARF\
+    ARF_RegSel = 3'b000;\ //enable 
+    ARF_FunSel = 2'b11; //clear
+
+`define CLR_RF\
+    RF_RegSel = 4'b0000;\ //enable 
+    RF_FunSel = 2'b11; //clear
 
 
 module control_unit (
@@ -525,7 +533,8 @@ output
     reg [7:0] Value;
     reg [3:0] SRCREG1, SRCREG2;
     
-    reg SeqCounter = 0;
+    reg [2:0] SeqCounter = 0;
+    reg [15:0] ProgCounter = 0;
     reg finish = 0;
     always @(posedge clk) begin
         if (finish == 1'b1) begin
@@ -533,23 +542,29 @@ output
         end
         else  begin
         SeqCounter <= SeqCounter + 1;
+        ProgCounter <= ProgCounter + 1;
             
         end
     end
 
+    if(ProgCounter == 0) begin
+        
+    end
+    
+
     //Fetch
     if(SeqCounter == 0) begin
-        `OUT_D_ARF_PC;
-        `INC_ARF_PC;
-        `OUT_MEM;
-        `IN_IR(1);
+        `OUT_D_ARF_PC
+        `INC_ARF_PC
+        `OUT_MEM
+        `IN_IR(1)
     end
 
     if(SeqCounter == 1) begin
-        `OUT_D_ARF_PC;
-        `INC_ARF_PC;
-        `OUT_MEM;
-        `IN_IR(0);
+        `OUT_D_ARF_PC
+        `INC_ARF_PC
+        `OUT_MEM
+        `IN_IR(0)
     end
 
     //Decode
@@ -571,8 +586,8 @@ output
     if(SeqCounter == 3) begin
         case(opcode) 
             2'h00:begin //BRA Branch
-                `MUX_A_IROUT;
-                `IN_ARF_PC;
+                `MUX_A_IROUT
+                `IN_ARF_PC
                 /*
                 MuxBSel = 2'b01; //select ir output
                 ARF_FunSel = 2'b10; //load arf
@@ -580,20 +595,20 @@ output
                 */
                 end
             2'h01:begin //LD Load   
-                `OUT_MEM;
+                `OUT_MEM
                 if(AddressMode) begin
-                    `MUX_A_IROUT;
+                    `MUX_A_IROUT
                 end else begin
-                    `MUX_A_MEMOUT;
+                    `MUX_A_MEMOUT
                 end
                 //MuxASel = AddressMode ? 2'b00 : 2'b01;
-                `WRITE_RX(Regsel);
+                `WRITE_RX(Regsel)
                 
                 end
             2'h02:begin //ST Store
                 RF_OutBSel = RegSel;
                 ALU_FunSel = 4'b0001; //pass B
-                `OUT_MEM; 
+                `OUT_MEM 
                 //Mem_CS = 0;
                 //Mem_WR = 1;
                 end
@@ -622,10 +637,10 @@ output
                 ALU_FunSel = 4'b1011; //  >>A
                 end
             2'h0B:begin // PUL
-                `OUT_D_ARF_SP;
-                `OUT_MEM;
-                `MUX_A_MEMOUT;
-                `WRITE_RX(Regsel);
+                `OUT_D_ARF_SP
+                `OUT_MEM
+                `MUX_A_MEMOUT
+                `WRITE_RX(Regsel)
 
                 //RF_OutBSel = RegSel;
                 //ALU_FunSel = 4'b0001; //pass B
@@ -639,7 +654,7 @@ output
                 */
                 end
             2'h0C:begin //PSH
-                `DEC_ARF_SP;
+                `DEC_ARF_SP
                 /*
                 ARF_RegSel = 3'b110;
                 ARF_FunSel = 2'b01;
@@ -771,21 +786,19 @@ output
            
         end
         
-        
-        
     end
 
     //Execute 2
     if(SeqCounter == 4) begin
         case(opcode) 
             2'h0B:begin // PUL
-                `INC_ARF_SP;
+                `INC_ARF_SP
                 end
             2'h0C:begin //PSH
                 RF_OutBSel = RegSel;
                 ALU_FunSel = 4'b0001; //pass B
-                `OUT_D_ARF_SP;
-                `IN_MEM;
+                `OUT_D_ARF_SP
+                `IN_MEM
                 end
                 
             default: begin
