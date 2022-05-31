@@ -340,8 +340,112 @@ module Memory(
     end
 endmodule
 
+`define  OUT_D_ARF_PC \
+    OutDSel = 2'b00
+`define  OUT_C_ARF_PC \
+    OutCSel = 2'b00
+`define  OUT_D_ARF_AR \
+    OutDSel = 2'b10
+`define  OUT_C_ARF_AR \
+    OutCSel = 2'b10
+`define  OUT_D_ARF_SP \
+    OutDSel = 2'b11
+`define  OUT_C_ARF_SP \
+    OutCSel = 2'b11
 
+`define OUT_A_REG1\
+    OutASel = 2'b00
+`define OUT_A_REG2\
+    OutASel = 2'b01
+`define OUT_A_REG3\
+    OutASel = 2'b10
+`define OUT_A_REG4\
+    OutASel = 2'b11
+`define OUT_B_REG1\
+    OutBSel = 2'b00
+`define OUT_B_REG2\
+    OutBSel = 2'b01
+`define OUT_B_REG3\
+    OutBSel = 2'b10
+`define OUT_B_REG4\
+    OutBSel = 2'b11
 
+`define IN_ARF_PC \
+    ARF_RegSel = 3'b011;\ //enable 
+    ARF_FunSel = 2'b10; //load 
+`define IN_ARF_AR \
+    ARF_RegSel = 3'b101;\ //enable 
+    ARF_FunSel = 2'b10; //load 
+`define IN_ARF_SP \
+    ARF_RegSel = 3'b110;\ //enable 
+    ARF_FunSel = 2'b10; //load 
+
+`define IN_REG1 \
+    RF_RegSel = 4'b0111;\ //enable 
+    RF_FunSel = 2'b10; //load 
+`define IN_REG2 \
+    RF_RegSel = 4'b1011;\ //enable 
+    RF_FunSel = 2'b10; //load 
+`define IN_REG3 \
+    RF_RegSel = 4'b1101;\ //enable 
+    RF_FunSel = 2'b10; //load 
+`define IN_REG4 \
+    RF_RegSel = 4'b1110;\ //enable 
+    RF_FunSel = 2'b10; //load 
+
+`define INC_ARF_PC \
+    ARF_RegSel = 3'b011;\ //enable 
+    ARF_FunSel = 2'b01; //increment 
+`define INC_ARF_AR \
+    ARF_RegSel = 3'b101;\ //enable 
+    ARF_FunSel = 2'b01; //increment 
+`define INC_ARF_SP \
+    ARF_RegSel = 3'b110;\ //enable 
+    ARF_FunSel = 2'b01; //increment 
+
+`define INC_REG1 \
+    RF_RegSel = 4'b0111;\ //enable 
+    RF_FunSel = 2'b01; //increment 
+`define INC_REG2 \
+    RF_RegSel = 4'b1011;\ //enable 
+    RF_FunSel = 2'b01; //increment 
+`define INC_REG3 \
+    RF_RegSel = 4'b1101;\ //enable 
+    RF_FunSel = 2'b01; //increment 
+`define INC_REG4 \
+    RF_RegSel = 4'b1110;\ //enable 
+    RF_FunSel = 2'b01; //increment 
+
+`define DEC_ARF_PC \
+    ARF_RegSel = 3'b011;\ //enable 
+    ARF_FunSel = 2'b00; //increment 
+`define DEC_ARF_AR \
+    ARF_RegSel = 3'b101;\ //enable 
+    ARF_FunSel = 2'b00; //increment 
+`define DEC_ARF_SP \
+    ARF_RegSel = 3'b110;\ //enable 
+    ARF_FunSel = 2'b00; //increment 
+
+`define DEC_REG1 \
+    RF_RegSel = 4'b0111;\ //enable 
+    RF_FunSel = 2'b00; //increment 
+`define DEC_REG2 \
+    RF_RegSel = 4'b1011;\ //enable 
+    RF_FunSel = 2'b00; //increment 
+`define DEC_REG3 \
+    RF_RegSel = 4'b1101;\ //enable 
+    RF_FunSel = 2'b00; //increment 
+`define DEC_REG4 \
+    RF_RegSel = 4'b1110;\ //enable 
+    RF_FunSel = 2'b00; //increment 
+
+`define OUT_MEM\
+    Mem_CS = 0; \
+    Mem_WR = 0;
+
+`define IN_MEM\
+    Mem_CS = 0; \
+    Mem_WR = 1;
 module control_unit (
 input [3:0] opcode,
 input [3:0] ir_11_8,
@@ -375,7 +479,22 @@ output
     reg [3:0] SRCREG1, SRCREG2;
     
     reg SeqCounter = 0;
+    reg finish = 0;
+    always @(posedge clk) begin
+        if (finish == 1'b1) begin
+            SeqCounter <= 0;
+        end
+        else  begin
+        SeqCounter <= SeqCounter + 1;
+            
+        end
+    end
+
     //Fetch
+
+    if(SeqCounter == 0) begin
+        `OUT_D_ARF_PC;
+        `INC_ARF_PC;
     
     
     
@@ -421,7 +540,7 @@ output
         end */
        
     end
-    
+    /*
     always@(*) begin
          if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
             if(Destreg >= 4'b0100) begin 
@@ -535,7 +654,8 @@ output
             end 
            
         end
-        
+    */
+       
     always@(*) begin 
         case(opcode) 
             2'h00:begin //BRA Branch
@@ -627,7 +747,7 @@ output
         endcase
     end
     
- */
+    
     
     
 endmodule
