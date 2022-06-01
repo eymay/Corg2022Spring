@@ -580,7 +580,7 @@ output
     //Decode
     if(SeqCounter == 2) begin
         opcode <= ir_15_8[7:4];
-        if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
+        if((opcode == 4'h00) || (opcode == 4'h01) || (opcode == 4'h02) || (opcode == 4'h0F) ) begin 
             RegSel <= ir_15_8[1:0];
             AddressMode <= ir_15_8[2];
         end else begin
@@ -595,7 +595,7 @@ output
     //Execute 1
     if(SeqCounter == 3) begin
         case(opcode) 
-            2'h00:begin //BRA Branch
+            4'h00:begin //BRA Branch
                 `MUX_B_IROUT
                 `IN_ARF_PC
                 /*
@@ -604,7 +604,7 @@ output
                 ARF_RegSel = 3'b011; //enable PC only
                 */
                 end
-            2'h01:begin //LD Load   
+            4'h01:begin //LD Load   
                 `OUT_MEM
                 if(AddressMode) begin
                     `MUX_A_IROUT
@@ -615,38 +615,38 @@ output
                 `WRITE_RX(Regsel)
                 
                 end
-            2'h02:begin //ST Store
+            4'h02:begin //ST Store
                 RF_OutBSel <= RegSel;
                 ALU_FunSel <= 4'b0001; //pass B
                 `OUT_MEM 
                 //Mem_CS = 0;
                 //Mem_WR = 1;
                 end
-            2'h03:begin //MOV Move
+            4'h03:begin //MOV Move
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h04:begin //AND
+            4'h04:begin //AND
                 ALU_FunSel <= 4'b0111; //A and B
                 end
-            2'h05:begin //OR
+            4'h05:begin //OR
                  ALU_FunSel <= 4'b1000; //A or B
                 end
-            2'h06:begin //NOT
+            4'h06:begin //NOT
                 ALU_FunSel <= 4'b0010; // not A
                 end
-            2'h07:begin //ADD
+            4'h07:begin //ADD
                 ALU_FunSel <= 4'b0100; //  A + B
                 end
-            2'h08:begin //SUB
+            4'h08:begin //SUB
                 ALU_FunSel <= 4'b0110; //  A - B
                 end
-            2'h09:begin //LSR logical shift right
+            4'h09:begin //LSR logical shift right
                 ALU_FunSel <= 4'b1010; //  A<<
                 end
-            2'h0A:begin //LSL
+            4'h0A:begin //LSL
                 ALU_FunSel <= 4'b1011; //  >>A
                 end
-            2'h0B:begin // PUL
+            4'h0B:begin // PUL
                 `OUT_D_ARF_SP
                 `OUT_MEM
                 `MUX_A_MEMOUT
@@ -663,7 +663,7 @@ output
                 ARF_FunSel = 2'b00;
                 */
                 end
-            2'h0C:begin //PSH
+            4'h0C:begin //PSH
                 `DEC_ARF_SP
                 /*
                 ARF_RegSel = 3'b110;
@@ -677,13 +677,13 @@ output
                 RF_FunSel = 2'b10;
                 */
                 end
-            2'h0D:begin //INC
+            4'h0D:begin //INC
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h0E:begin //DEC
+            4'h0E:begin //DEC
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h0F:begin // BNE
+            4'h0F:begin // BNE
                     if (ALU_OutFlag[3] == 0) begin
                         MuxBSel <= AddressMode ? 2'b01 : 2'b10;
                         ARF_FunSel <= 2'b10;
@@ -695,7 +695,7 @@ output
 
             endcase
 
-            if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
+            if((opcode >= 4'h03 && opcode <= 4'h0A) ||  opcode == 4'h0D ||  opcode == 4'h0E ) begin 
             if(Destreg >= 4'b0100) begin 
                 MuxASel <= 2'b11;
                 RF_FunSel <= 2'b10;
@@ -704,7 +704,7 @@ output
                 ARF_FunSel <= 2'b10;
             end
             
-            if( opcode == 2'h0D )begin
+            if( opcode == 4'h0D )begin
                 if(SRCREG1>= 4'b0100) begin
                     RF_FunSel <= 2'b01; //increment
                 end else begin
@@ -713,7 +713,7 @@ output
             end
             
                 
-            if(opcode == 2'h0E) begin
+            if(opcode == 4'h0E) begin
                 if(SRCREG1>= 4'b0100) begin
                     RF_FunSel <= 2'b00; //decrement
                 end else begin
@@ -801,10 +801,10 @@ output
     //Execute 2
     if(SeqCounter == 4) begin
         case(opcode) 
-            2'h0B:begin // PUL
+            4'h0B:begin // PUL
                 `INC_ARF_SP
                 end
-            2'h0C:begin //PSH
+            4'h0C:begin //PSH
                 RF_OutBSel <= RegSel;
                 ALU_FunSel <= 4'b0001; //pass B
                 `OUT_D_ARF_SP
