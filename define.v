@@ -10,7 +10,8 @@
     ARF_OutDSel = 2'b11;
 `define  OUT_C_ARF_SP \
     ARF_OutCSel = 2'b11;
-
+`define  OUT_IR \
+    IR_Enable = 0;
 
 `define IN_ARF_PC \
     ARF_RegSel = 3'b011; \

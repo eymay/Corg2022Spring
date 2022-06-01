@@ -593,7 +593,7 @@ output
     if(SeqCounter == 3) begin
         case(opcode) 
             2'h00:begin //BRA Branch
-                `MUX_A_IROUT
+                `MUX_B_IROUT
                 `IN_ARF_PC
                 /*
                 MuxBSel = 2'b01; //select ir output
@@ -1081,24 +1081,24 @@ endmodule
 
 module top_system( input Clock, input reset);
 
-wire
-    [1:0] RF_OutASel, 
-    [1:0] RF_OutBSel, 
-    [1:0] RF_FunSel,
-    [3:0] RF_RegSel,
-    [3:0] ALU_FunSel,
-    [1:0] ARF_OutCSel, 
-    [1:0] ARF_OutDSel, 
-    [1:0] ARF_FunSel,
-    [2:0] ARF_RegSel,
-    IR_LH,
-    IR_Enable,
-    [1:0] IR_Funsel,
-    Mem_WR,
-    Mem_CS,
-    [1:0] MuxASel,
-    [1:0] MuxBSel,
-    MuxCSel;
+
+  wire  [1:0] RF_OutASel; 
+  wire  [1:0] RF_OutBSel; 
+  wire  [1:0] RF_FunSel;
+  wire  [3:0] RF_RegSel;
+  wire  [3:0] ALU_FunSel;
+  wire  [1:0] ARF_OutCSel; 
+  wire  [1:0] ARF_OutDSel; 
+  wire  [1:0] ARF_FunSel;
+  wire  [2:0] ARF_RegSel;
+  wire  IR_LH;
+  wire  IR_Enable;
+  wire  [1:0] IR_Funsel;
+  wire  Mem_WR;
+  wire  Mem_CS;
+  wire  [1:0] MuxASel;
+  wire  [1:0] MuxBSel;
+  wire  MuxCSel;
 
 control_unit cpu(
 .ir_15_8(IROut[15:8]),
@@ -1136,15 +1136,15 @@ ALUSystem ALU
     .ARF_OutDSel(ARF_OutDSel), 
     .ARF_FunSel(ARF_FunSel),
     .ARF_RegSel(ARF_RegSel),
-    .IR_LH(),
-    .IR_Enable(),
-    .IR_Funsel(),
-    .Mem_WR(),
-    .Mem_CS(),
-    .MuxASel(),
-    .MuxBSel(),
-    .MuxCSel(),
-    .Clock
+    .IR_LH(IR_LH),
+    .IR_Enable(IR_Enable),
+    .IR_Funsel(IR_Funsel),
+    .Mem_WR(Mem_WR),
+    .Mem_CS(Mem_CS),
+    .MuxASel(MuxASel),
+    .MuxBSel(MuxBSel),
+    .MuxCSel(MuxCSel),
+    .Clock(Clock)
     );
 endmodule
 
