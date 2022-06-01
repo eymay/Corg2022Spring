@@ -339,7 +339,7 @@ module Memory(
         end
     end
 endmodule
-
+/*
 `define  OUT_D_ARF_PC \
     ARF_OutDSel = 2'b00;
 `define  OUT_C_ARF_PC \
@@ -501,7 +501,7 @@ endmodule
     RF_RegSel = 4'b0000;\ //enable 
     RF_FunSel = 2'b11; //clear
 
-
+*/
 module control_unit (
 //input [3:0] opcode,
 input [7:0] ir_15_8,
