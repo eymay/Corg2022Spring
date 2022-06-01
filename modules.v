@@ -820,166 +820,7 @@ output
         finish = 1;
     
     end
-    /*
-    always@(*) begin
-        if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
-            RegSel <= ir_11_8[1:0];
-            AddressMode <= ir_11_8[2];
-            */
-            /*
-            if(~AddressMode) begin //direct addressing
-                MuxBSel = 2'b01; //select arf
-                ARF_FunSel = 2'b10; //load arf
-                ARF_RegSel = 3'b101; //enable address register only
-                ARF_OutDSel = 2'b10; //output AR to memory
-                Mem_CS = 0; //memory enabled
-                Mem_WR = 0; //read memory
-                //memory returned value                
-            end
-            */
-            /*
-        end else begin
-            Destreg = ir_11_8[3:0];
-            SRCREG2 = ir_7_0[3:0];
-            SRCREG1 = ir_7_0[7:4];
-        end
-    end
-    */
-    /*
-    
-    always@(*) begin
-        if(opcode == 2'h01 || opcode == 2'h0C) begin //enable regfile register for writing only
-        case(RegSel)
-        2'b00: RF_RegSel = 4'b0111;
-        2'b01: RF_RegSel = 4'b1011;
-        2'b10: RF_RegSel = 4'b1101;
-        2'b11: RF_RegSel = 4'b1110;        
-        endcase
-        end 
-        
-        
-        
-        /*else begin
-         RF_RegSel = 4'b1111; // disable registers 
-        end */
-       
-    
-    /*
-    always@(*) begin
-         if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
-            if(Destreg >= 4'b0100) begin 
-                MuxASel = 2'b11;
-                RF_FunSel = 2'b10;
-            end else begin
-                MuxBSel = 2'b11;
-                ARF_FunSel = 2'b10;
-            end
-            
-            if( opcode == 2'h0D )begin
-                if(SRCREG1>= 4'b0100) begin
-                    RF_FunSel = 2'b01; //increment
-                end else begin
-                    ARF_FunSel = 2'b01;
-                end
-            end
-            
-                
-            if(opcode == 2'h0E) begin
-                if(SRCREG1>= 4'b0100) begin
-                    RF_FunSel = 2'b00; //decrement
-                end else begin
-                    ARF_FunSel = 2'b00;
-                 end
-            end
-            case(Destreg)
-            4'b0000:begin
-                ARF_RegSel = 3'b011;
-                end
-            4'b0001:begin
-                ARF_RegSel = 3'b011;
-                end
-            4'b0010:begin
-                ARF_RegSel = 3'b101;
-                end
-            4'b0011:begin
-                ARF_RegSel = 3'b110;
-                end
-            4'b0100:begin
-                RF_RegSel = 4'b0111;
-                end
-            4'b0101:begin
-                RF_RegSel = 4'b1011;
-                end
-            4'b0110:begin
-                RF_RegSel = 4'b1101;
-                end
-            4'b0111:begin
-                RF_RegSel = 4'b1110;
-                end
-        
-            endcase
-            
-            case(SRCREG1)
-             4'b0000:begin
-                ARF_OutCSel = 2'b00;
-                end
-            4'b0001:begin
-                ARF_OutCSel = 2'b00;
-                end
-            4'b0010:begin
-                ARF_OutCSel = 2'b10;
-                end
-            4'b0011:begin
-                ARF_OutCSel = 2'b11;
-                end
-            4'b0100:begin
-                RF_OutBSel = 2'b00;
-                end
-            4'b0101:begin
-                RF_OutBSel = 2'b01;
-                end
-            4'b0110:begin
-                RF_OutBSel = 2'b10;
-                end
-            4'b0111:begin
-                RF_OutBSel = 2'b11;
-                end
-                    
-            endcase
-
-            case (SRCREG2)
-            4'b0000:begin
-                ARF_OutCSel = 2'b00;
-                end
-            4'b0001:begin
-                ARF_OutCSel = 2'b00;
-                end
-            4'b0010:begin
-                ARF_OutCSel = 2'b10;
-                end
-            4'b0011:begin
-                ARF_OutCSel = 2'b11;
-                end
-            4'b0100:begin
-                RF_OutASel = 2'b00;
-                end
-            4'b0101:begin
-                RF_OutASel = 2'b01;
-                end
-            4'b0110:begin
-                RF_OutASel = 2'b10;
-                end
-            4'b0111:begin
-                RF_OutASel = 2'b11;
-                end
-            endcase
-
-            MuxCSel = ((SRCREG2 < 4'b0100) || (SRCREG1 < 4'b0100)) ? 0:1;
-            end 
-           
-        end
-    */
-     
+   
     
     
     
@@ -1006,7 +847,8 @@ module ALUSystem
     [1:0] MuxASel,
     [1:0] MuxBSel,
     MuxCSel,
-    Clock
+    Clock,
+    output [15:0] IROut
     );
 wire [7:0] ALUOut;
 wire [7:0] Address;
@@ -1033,7 +875,7 @@ always @(*) begin
     endcase
 end
 
-wire [15:0] IROut;
+
 
 assign IR_Out_LSB = IROut[7:0];
 
@@ -1064,16 +906,7 @@ RegFile rf1(.OutASel(RF_OutASel), .OutBSel(RF_OutBSel), .FunSel(RF_FunSel), .Reg
 wire [7:0] MuxCOut;
 
 assign MuxCOut = MuxCSel ? AOut: ARF_COut;
-/*
-always @(MuxCSel) begin
-    if (MuxCSel) begin
-        MuxCOut = AOut;
-    end else begin
-        MuxCOut = ARF_COut;
-    end
-    
-end
-*/
+
 wire [3:0] ALUOutFlag;
 ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(ALUOutFlag), .CLK(Clock));
 
@@ -1099,6 +932,7 @@ module top_system( input Clock, input reset);
   wire  [1:0] MuxASel;
   wire  [1:0] MuxBSel;
   wire  MuxCSel;
+  wire [15:0] IROut;
 
 control_unit cpu(
 .ir_15_8(IROut[15:8]),
@@ -1127,7 +961,7 @@ control_unit cpu(
 
 ALUSystem ALU
 ( 
-    .RF_OutASel(RF_OutASel),, 
+    .RF_OutASel(RF_OutASel),
     .RF_OutBSel(RF_OutBSel), 
     .RF_FunSel(RF_FunSel),  
     .RF_RegSel(RF_RegSel),  
@@ -1144,7 +978,8 @@ ALUSystem ALU
     .MuxASel(MuxASel),
     .MuxBSel(MuxBSel),
     .MuxCSel(MuxCSel),
-    .Clock(Clock)
+    .Clock(Clock),
+    .IROut(IROut)
     );
 endmodule
 

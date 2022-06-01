@@ -673,4 +673,20 @@ module Project1Test();
         end
 endmodule
 
-     
+module top_test();
+  reg Clock;
+  reg reset;
+  
+     top_system top( Clock, reset);
+     always begin
+        #100; Clock = ~Clock;
+     end
+     initial begin 
+        
+        Clock = 1;
+         reset = 1; #100;
+        reset = 0; #100;
+        
+        $finish;
+     end
+endmodule
