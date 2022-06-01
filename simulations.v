@@ -425,7 +425,7 @@ module Project1Test();
     
     //Read Test Bench Values
     initial begin
-        $readmemb("TestBench.mem", TestVectors); // Read vectors
+        $readmemb("ProjectFiles_10_05/TestBench.mem", TestVectors); // Read vectors
         VectorNum = 0; Reset=0;// Initialize
     end
     
@@ -677,14 +677,16 @@ module top_test();
   reg Clock;
   reg reset;
   
+  
      top_system top( Clock, reset);
      always begin
-        #10; Clock = ~Clock;
+        #1; Clock = ~Clock;
      end
      initial begin 
-        
+        $dumpfile("test.vcd");
+        $dumpvars();
         Clock = 1;
-         reset = 1; #101;
+         reset = 1; #10;
         reset = 0; #100;
         
         #2 $finish;

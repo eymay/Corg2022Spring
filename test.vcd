@@ -1,0 +1,1488 @@
+$date
+	Thu Jun  2 00:35:36 2022
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module ALU_test $end
+$var wire 4 ! OutFlag [3:0] $end
+$var wire 8 " OutALU [7:0] $end
+$var reg 8 # A [7:0] $end
+$var reg 8 $ B [7:0] $end
+$var reg 1 % CLK $end
+$var reg 4 & FunSelect [3:0] $end
+$var integer 32 ' i [31:0] $end
+$scope module test $end
+$var wire 8 ( A [7:0] $end
+$var wire 8 ) B [7:0] $end
+$var wire 1 % CLK $end
+$var wire 4 * FunSel [3:0] $end
+$var wire 8 + OutALU [7:0] $end
+$var wire 1 , Cin $end
+$var reg 8 - ALU_result [7:0] $end
+$var reg 4 . OutFlag [3:0] $end
+$var reg 1 / enable_o $end
+$upscope $end
+$upscope $end
+$scope module ARF_Test $end
+$var wire 8 0 OutputD [7:0] $end
+$var wire 8 1 OutputC [7:0] $end
+$var reg 1 2 CLK $end
+$var reg 2 3 FunSelect [1:0] $end
+$var reg 8 4 Input [7:0] $end
+$var reg 2 5 OutCSelect [1:0] $end
+$var reg 2 6 OutDSelect [1:0] $end
+$var reg 3 7 RegisterSelect [2:0] $end
+$var integer 32 8 a [31:0] $end
+$var integer 32 9 j [31:0] $end
+$var integer 32 : k [31:0] $end
+$scope module file $end
+$var wire 1 2 CLK $end
+$var wire 2 ; FunSel [1:0] $end
+$var wire 8 < I [7:0] $end
+$var wire 8 = OutC [7:0] $end
+$var wire 2 > OutCSel [1:0] $end
+$var wire 8 ? OutD [7:0] $end
+$var wire 2 @ OutDSel [1:0] $end
+$var wire 3 A RegSel [2:0] $end
+$var wire 8 B SP_Q [7:0] $end
+$var wire 8 C PC_Q [7:0] $end
+$var wire 8 D AR_Q [7:0] $end
+$var reg 8 E OutC_temp [7:0] $end
+$var reg 8 F OutD_temp [7:0] $end
+$scope module AR $end
+$var wire 1 2 CLK $end
+$var wire 1 G E $end
+$var wire 2 H FunSel [1:0] $end
+$var wire 8 I I [7:0] $end
+$var wire 8 J Q [7:0] $end
+$var reg 8 K Q_temp [7:0] $end
+$upscope $end
+$scope module PC $end
+$var wire 1 2 CLK $end
+$var wire 1 L E $end
+$var wire 2 M FunSel [1:0] $end
+$var wire 8 N I [7:0] $end
+$var wire 8 O Q [7:0] $end
+$var reg 8 P Q_temp [7:0] $end
+$upscope $end
+$scope module SP $end
+$var wire 1 2 CLK $end
+$var wire 1 Q E $end
+$var wire 2 R FunSel [1:0] $end
+$var wire 8 S I [7:0] $end
+$var wire 8 T Q [7:0] $end
+$var reg 8 U Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module IR_Test $end
+$var wire 16 V Out [15:0] $end
+$var reg 1 W CLK $end
+$var reg 1 X E $end
+$var reg 2 Y FunSelect [1:0] $end
+$var reg 8 Z Input [7:0] $end
+$var reg 1 [ LH $end
+$var integer 32 \ i [31:0] $end
+$scope module Ir $end
+$var wire 1 W CLK $end
+$var wire 1 X En $end
+$var wire 2 ] FunSel [1:0] $end
+$var wire 8 ^ I [7:0] $end
+$var wire 1 [ LH $end
+$var wire 16 _ IRout [15:0] $end
+$var reg 16 ` I_temp [15:0] $end
+$scope module IR $end
+$var wire 1 W CLK $end
+$var wire 1 X E $end
+$var wire 2 a FunSel [1:0] $end
+$var wire 16 b I [15:0] $end
+$var wire 16 c Q [15:0] $end
+$var reg 16 d Q_temp [15:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module Project1Test $end
+$var reg 8 e ALUOut [7:0] $end
+$var reg 4 f ALUOutFlag [3:0] $end
+$var reg 4 g ALU_FunSel [3:0] $end
+$var reg 8 h AOut [7:0] $end
+$var reg 8 i ARF_COut [7:0] $end
+$var reg 2 j ARF_FunSel [1:0] $end
+$var reg 2 k ARF_OutCSel [1:0] $end
+$var reg 2 l ARF_OutDSel [1:0] $end
+$var reg 3 m ARF_RegSel [2:0] $end
+$var reg 8 n Address [7:0] $end
+$var reg 8 o BOut [7:0] $end
+$var reg 1 p C $end
+$var reg 1 q Check_ALUOut $end
+$var reg 1 r Check_ALUOutFlag $end
+$var reg 1 s Check_AOut $end
+$var reg 1 t Check_ARF_COut $end
+$var reg 1 u Check_Address $end
+$var reg 1 v Check_BOut $end
+$var reg 1 w Check_C $end
+$var reg 1 x Check_IROut $end
+$var reg 1 y Check_MemoryOut $end
+$var reg 1 z Check_MuxAOut $end
+$var reg 1 { Check_MuxBOut $end
+$var reg 1 | Check_MuxCOut $end
+$var reg 1 } Check_N $end
+$var reg 1 ~ Check_O $end
+$var reg 1 !" Check_Z $end
+$var reg 1 "" Clock $end
+$var reg 16 #" IROut [15:0] $end
+$var reg 1 $" IR_Enable $end
+$var reg 2 %" IR_Funsel [1:0] $end
+$var reg 1 &" IR_LH $end
+$var reg 8 '" LineCheck [7:0] $end
+$var reg 8 (" LineError [7:0] $end
+$var reg 1 )" Mem_CS $end
+$var reg 1 *" Mem_WR $end
+$var reg 8 +" MemoryOut [7:0] $end
+$var reg 8 ," MuxAOut [7:0] $end
+$var reg 2 -" MuxASel [1:0] $end
+$var reg 8 ." MuxBOut [7:0] $end
+$var reg 2 /" MuxBSel [1:0] $end
+$var reg 8 0" MuxCOut [7:0] $end
+$var reg 1 1" MuxCSel $end
+$var reg 1 2" N $end
+$var reg 1 3" O $end
+$var reg 1 4" Operation $end
+$var reg 2 5" RF_FunSel [1:0] $end
+$var reg 2 6" RF_OutASel [1:0] $end
+$var reg 2 7" RF_OutBSel [1:0] $end
+$var reg 4 8" RF_RegSel [3:0] $end
+$var reg 1 9" Reset $end
+$var reg 8 :" TotalError [7:0] $end
+$var reg 8 ;" TotalLine [7:0] $end
+$var reg 32 <" VectorNum [31:0] $end
+$var reg 1 =" Z $end
+$scope module _ALUSystem $end
+$var wire 4 >" ALU_FunSel [3:0] $end
+$var wire 2 ?" ARF_FunSel [1:0] $end
+$var wire 2 @" ARF_OutCSel [1:0] $end
+$var wire 2 A" ARF_OutDSel [1:0] $end
+$var wire 3 B" ARF_RegSel [2:0] $end
+$var wire 1 "" Clock $end
+$var wire 1 $" IR_Enable $end
+$var wire 2 C" IR_Funsel [1:0] $end
+$var wire 1 &" IR_LH $end
+$var wire 1 )" Mem_CS $end
+$var wire 1 *" Mem_WR $end
+$var wire 2 D" MuxASel [1:0] $end
+$var wire 2 E" MuxBSel [1:0] $end
+$var wire 1 1" MuxCSel $end
+$var wire 2 F" RF_FunSel [1:0] $end
+$var wire 2 G" RF_OutASel [1:0] $end
+$var wire 2 H" RF_OutBSel [1:0] $end
+$var wire 4 I" RF_RegSel [3:0] $end
+$var wire 8 J" MuxCOut [7:0] $end
+$var wire 8 K" MemoryOut [7:0] $end
+$var wire 8 L" IR_Out_LSB [7:0] $end
+$var wire 16 M" IROut [15:0] $end
+$var wire 8 N" BOut [7:0] $end
+$var wire 8 O" Address [7:0] $end
+$var wire 8 P" ARF_COut [7:0] $end
+$var wire 8 Q" AOut [7:0] $end
+$var wire 4 R" ALUOutFlag [3:0] $end
+$var wire 8 S" ALUOut [7:0] $end
+$var reg 8 T" MuxAOut [7:0] $end
+$var reg 8 U" MuxBOut [7:0] $end
+$scope module Mem $end
+$var wire 1 "" clock $end
+$var wire 1 )" cs $end
+$var wire 1 *" wr $end
+$var wire 8 V" data [7:0] $end
+$var wire 8 W" address [7:0] $end
+$var reg 8 X" o [7:0] $end
+$upscope $end
+$scope module alu1 $end
+$var wire 8 Y" A [7:0] $end
+$var wire 1 "" CLK $end
+$var wire 4 Z" FunSel [3:0] $end
+$var wire 8 [" OutALU [7:0] $end
+$var wire 1 \" Cin $end
+$var wire 8 ]" B [7:0] $end
+$var reg 8 ^" ALU_result [7:0] $end
+$var reg 4 _" OutFlag [3:0] $end
+$var reg 1 `" enable_o $end
+$upscope $end
+$scope module arf1 $end
+$var wire 1 "" CLK $end
+$var wire 2 a" FunSel [1:0] $end
+$var wire 8 b" I [7:0] $end
+$var wire 2 c" OutCSel [1:0] $end
+$var wire 8 d" OutD [7:0] $end
+$var wire 2 e" OutDSel [1:0] $end
+$var wire 3 f" RegSel [2:0] $end
+$var wire 8 g" SP_Q [7:0] $end
+$var wire 8 h" PC_Q [7:0] $end
+$var wire 8 i" OutC [7:0] $end
+$var wire 8 j" AR_Q [7:0] $end
+$var reg 8 k" OutC_temp [7:0] $end
+$var reg 8 l" OutD_temp [7:0] $end
+$scope module AR $end
+$var wire 1 "" CLK $end
+$var wire 1 m" E $end
+$var wire 2 n" FunSel [1:0] $end
+$var wire 8 o" I [7:0] $end
+$var wire 8 p" Q [7:0] $end
+$var reg 8 q" Q_temp [7:0] $end
+$upscope $end
+$scope module PC $end
+$var wire 1 "" CLK $end
+$var wire 1 r" E $end
+$var wire 2 s" FunSel [1:0] $end
+$var wire 8 t" I [7:0] $end
+$var wire 8 u" Q [7:0] $end
+$var reg 8 v" Q_temp [7:0] $end
+$upscope $end
+$scope module SP $end
+$var wire 1 "" CLK $end
+$var wire 1 w" E $end
+$var wire 2 x" FunSel [1:0] $end
+$var wire 8 y" I [7:0] $end
+$var wire 8 z" Q [7:0] $end
+$var reg 8 {" Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$scope module ir1 $end
+$var wire 1 "" CLK $end
+$var wire 1 $" En $end
+$var wire 2 |" FunSel [1:0] $end
+$var wire 8 }" I [7:0] $end
+$var wire 1 &" LH $end
+$var wire 16 ~" IRout [15:0] $end
+$var reg 16 !# I_temp [15:0] $end
+$scope module IR $end
+$var wire 1 "" CLK $end
+$var wire 1 $" E $end
+$var wire 2 "# FunSel [1:0] $end
+$var wire 16 ## I [15:0] $end
+$var wire 16 $# Q [15:0] $end
+$var reg 16 %# Q_temp [15:0] $end
+$upscope $end
+$upscope $end
+$scope module rf1 $end
+$var wire 1 "" CLK $end
+$var wire 2 &# FunSel [1:0] $end
+$var wire 8 '# I [7:0] $end
+$var wire 2 (# OutASel [1:0] $end
+$var wire 8 )# OutB [7:0] $end
+$var wire 2 *# OutBSel [1:0] $end
+$var wire 4 +# RegSel [3:0] $end
+$var wire 8 ,# R4_Q [7:0] $end
+$var wire 8 -# R3_Q [7:0] $end
+$var wire 8 .# R2_Q [7:0] $end
+$var wire 8 /# R1_Q [7:0] $end
+$var wire 8 0# OutA [7:0] $end
+$var reg 8 1# OutA_temp [7:0] $end
+$var reg 8 2# OutB_temp [7:0] $end
+$scope module R1 $end
+$var wire 1 "" CLK $end
+$var wire 1 3# E $end
+$var wire 2 4# FunSel [1:0] $end
+$var wire 8 5# I [7:0] $end
+$var wire 8 6# Q [7:0] $end
+$var reg 8 7# Q_temp [7:0] $end
+$upscope $end
+$scope module R2 $end
+$var wire 1 "" CLK $end
+$var wire 1 8# E $end
+$var wire 2 9# FunSel [1:0] $end
+$var wire 8 :# I [7:0] $end
+$var wire 8 ;# Q [7:0] $end
+$var reg 8 <# Q_temp [7:0] $end
+$upscope $end
+$scope module R3 $end
+$var wire 1 "" CLK $end
+$var wire 1 =# E $end
+$var wire 2 ># FunSel [1:0] $end
+$var wire 8 ?# I [7:0] $end
+$var wire 8 @# Q [7:0] $end
+$var reg 8 A# Q_temp [7:0] $end
+$upscope $end
+$scope module R4 $end
+$var wire 1 "" CLK $end
+$var wire 1 B# E $end
+$var wire 2 C# FunSel [1:0] $end
+$var wire 8 D# I [7:0] $end
+$var wire 8 E# Q [7:0] $end
+$var reg 8 F# Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module RegFile_Test $end
+$var wire 8 G# OutputB [7:0] $end
+$var wire 8 H# OutputA [7:0] $end
+$var reg 1 I# CLK $end
+$var reg 2 J# FunSelect [1:0] $end
+$var reg 8 K# Input [7:0] $end
+$var reg 2 L# OutASelect [1:0] $end
+$var reg 2 M# OutBSelect [1:0] $end
+$var reg 4 N# RegisterSelect [3:0] $end
+$var integer 32 O# a [31:0] $end
+$var integer 32 P# j [31:0] $end
+$var integer 32 Q# k [31:0] $end
+$scope module file $end
+$var wire 1 I# CLK $end
+$var wire 2 R# FunSel [1:0] $end
+$var wire 8 S# I [7:0] $end
+$var wire 8 T# OutA [7:0] $end
+$var wire 2 U# OutASel [1:0] $end
+$var wire 8 V# OutB [7:0] $end
+$var wire 2 W# OutBSel [1:0] $end
+$var wire 4 X# RegSel [3:0] $end
+$var wire 8 Y# R4_Q [7:0] $end
+$var wire 8 Z# R3_Q [7:0] $end
+$var wire 8 [# R2_Q [7:0] $end
+$var wire 8 \# R1_Q [7:0] $end
+$var reg 8 ]# OutA_temp [7:0] $end
+$var reg 8 ^# OutB_temp [7:0] $end
+$scope module R1 $end
+$var wire 1 I# CLK $end
+$var wire 1 _# E $end
+$var wire 2 `# FunSel [1:0] $end
+$var wire 8 a# I [7:0] $end
+$var wire 8 b# Q [7:0] $end
+$var reg 8 c# Q_temp [7:0] $end
+$upscope $end
+$scope module R2 $end
+$var wire 1 I# CLK $end
+$var wire 1 d# E $end
+$var wire 2 e# FunSel [1:0] $end
+$var wire 8 f# I [7:0] $end
+$var wire 8 g# Q [7:0] $end
+$var reg 8 h# Q_temp [7:0] $end
+$upscope $end
+$scope module R3 $end
+$var wire 1 I# CLK $end
+$var wire 1 i# E $end
+$var wire 2 j# FunSel [1:0] $end
+$var wire 8 k# I [7:0] $end
+$var wire 8 l# Q [7:0] $end
+$var reg 8 m# Q_temp [7:0] $end
+$upscope $end
+$scope module R4 $end
+$var wire 1 I# CLK $end
+$var wire 1 n# E $end
+$var wire 2 o# FunSel [1:0] $end
+$var wire 8 p# I [7:0] $end
+$var wire 8 q# Q [7:0] $end
+$var reg 8 r# Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module Register_Test $end
+$var wire 8 s# Q [7:0] $end
+$var reg 1 t# CLK $end
+$var reg 1 u# En $end
+$var reg 2 v# FunSel [1:0] $end
+$var reg 8 w# I [7:0] $end
+$var reg 2 x# e [1:0] $end
+$var reg 2 y# f [1:0] $end
+$var reg 8 z# i [7:0] $end
+$scope module R1 $end
+$var wire 1 t# CLK $end
+$var wire 1 u# E $end
+$var wire 2 {# FunSel [1:0] $end
+$var wire 8 |# I [7:0] $end
+$var wire 8 }# Q [7:0] $end
+$var reg 8 ~# Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$scope module top_test $end
+$var reg 1 !$ Clock $end
+$var reg 1 "$ reset $end
+$scope module top $end
+$var wire 1 !$ Clock $end
+$var wire 1 "$ reset $end
+$var wire 4 #$ RF_RegSel [3:0] $end
+$var wire 2 $$ RF_OutBSel [1:0] $end
+$var wire 2 %$ RF_OutASel [1:0] $end
+$var wire 2 &$ RF_FunSel [1:0] $end
+$var wire 1 '$ MuxCSel $end
+$var wire 2 ($ MuxBSel [1:0] $end
+$var wire 2 )$ MuxASel [1:0] $end
+$var wire 1 *$ Mem_WR $end
+$var wire 1 +$ Mem_CS $end
+$var wire 1 ,$ IR_LH $end
+$var wire 2 -$ IR_Funsel [1:0] $end
+$var wire 1 .$ IR_Enable $end
+$var wire 16 /$ IROut [15:0] $end
+$var wire 3 0$ ARF_RegSel [2:0] $end
+$var wire 2 1$ ARF_OutDSel [1:0] $end
+$var wire 2 2$ ARF_OutCSel [1:0] $end
+$var wire 2 3$ ARF_FunSel [1:0] $end
+$var wire 4 4$ ALU_FunSel [3:0] $end
+$var wire 4 5$ ALUOutFlag [3:0] $end
+$scope module ALU $end
+$var wire 1 !$ Clock $end
+$var wire 4 6$ RF_RegSel [3:0] $end
+$var wire 2 7$ RF_OutBSel [1:0] $end
+$var wire 2 8$ RF_OutASel [1:0] $end
+$var wire 2 9$ RF_FunSel [1:0] $end
+$var wire 1 '$ MuxCSel $end
+$var wire 8 :$ MuxCOut [7:0] $end
+$var wire 2 ;$ MuxBSel [1:0] $end
+$var wire 2 <$ MuxASel [1:0] $end
+$var wire 8 =$ MemoryOut [7:0] $end
+$var wire 1 *$ Mem_WR $end
+$var wire 1 +$ Mem_CS $end
+$var wire 8 >$ IR_Out_LSB [7:0] $end
+$var wire 1 ,$ IR_LH $end
+$var wire 2 ?$ IR_Funsel [1:0] $end
+$var wire 1 .$ IR_Enable $end
+$var wire 16 @$ IROut [15:0] $end
+$var wire 8 A$ BOut [7:0] $end
+$var wire 8 B$ Address [7:0] $end
+$var wire 3 C$ ARF_RegSel [2:0] $end
+$var wire 2 D$ ARF_OutDSel [1:0] $end
+$var wire 2 E$ ARF_OutCSel [1:0] $end
+$var wire 2 F$ ARF_FunSel [1:0] $end
+$var wire 8 G$ ARF_COut [7:0] $end
+$var wire 8 H$ AOut [7:0] $end
+$var wire 4 I$ ALU_FunSel [3:0] $end
+$var wire 4 J$ ALUOutFlag [3:0] $end
+$var wire 8 K$ ALUOut [7:0] $end
+$var reg 8 L$ MuxAOut [7:0] $end
+$var reg 8 M$ MuxBOut [7:0] $end
+$scope module Mem $end
+$var wire 1 !$ clock $end
+$var wire 1 *$ wr $end
+$var wire 8 N$ data [7:0] $end
+$var wire 1 +$ cs $end
+$var wire 8 O$ address [7:0] $end
+$var reg 8 P$ o [7:0] $end
+$upscope $end
+$scope module alu1 $end
+$var wire 8 Q$ A [7:0] $end
+$var wire 1 !$ CLK $end
+$var wire 8 R$ OutALU [7:0] $end
+$var wire 4 S$ FunSel [3:0] $end
+$var wire 1 T$ Cin $end
+$var wire 8 U$ B [7:0] $end
+$var reg 8 V$ ALU_result [7:0] $end
+$var reg 4 W$ OutFlag [3:0] $end
+$var reg 1 X$ enable_o $end
+$upscope $end
+$scope module arf1 $end
+$var wire 1 !$ CLK $end
+$var wire 8 Y$ I [7:0] $end
+$var wire 8 Z$ OutD [7:0] $end
+$var wire 8 [$ SP_Q [7:0] $end
+$var wire 3 \$ RegSel [2:0] $end
+$var wire 8 ]$ PC_Q [7:0] $end
+$var wire 2 ^$ OutDSel [1:0] $end
+$var wire 2 _$ OutCSel [1:0] $end
+$var wire 8 `$ OutC [7:0] $end
+$var wire 2 a$ FunSel [1:0] $end
+$var wire 8 b$ AR_Q [7:0] $end
+$var reg 8 c$ OutC_temp [7:0] $end
+$var reg 8 d$ OutD_temp [7:0] $end
+$scope module AR $end
+$var wire 1 !$ CLK $end
+$var wire 1 e$ E $end
+$var wire 8 f$ I [7:0] $end
+$var wire 8 g$ Q [7:0] $end
+$var wire 2 h$ FunSel [1:0] $end
+$var reg 8 i$ Q_temp [7:0] $end
+$upscope $end
+$scope module PC $end
+$var wire 1 !$ CLK $end
+$var wire 1 j$ E $end
+$var wire 8 k$ I [7:0] $end
+$var wire 8 l$ Q [7:0] $end
+$var wire 2 m$ FunSel [1:0] $end
+$var reg 8 n$ Q_temp [7:0] $end
+$upscope $end
+$scope module SP $end
+$var wire 1 !$ CLK $end
+$var wire 1 o$ E $end
+$var wire 8 p$ I [7:0] $end
+$var wire 8 q$ Q [7:0] $end
+$var wire 2 r$ FunSel [1:0] $end
+$var reg 8 s$ Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$scope module ir1 $end
+$var wire 1 !$ CLK $end
+$var wire 8 t$ I [7:0] $end
+$var wire 1 ,$ LH $end
+$var wire 16 u$ IRout [15:0] $end
+$var wire 2 v$ FunSel [1:0] $end
+$var wire 1 .$ En $end
+$var reg 16 w$ I_temp [15:0] $end
+$scope module IR $end
+$var wire 1 !$ CLK $end
+$var wire 16 x$ I [15:0] $end
+$var wire 16 y$ Q [15:0] $end
+$var wire 2 z$ FunSel [1:0] $end
+$var wire 1 .$ E $end
+$var reg 16 {$ Q_temp [15:0] $end
+$upscope $end
+$upscope $end
+$scope module rf1 $end
+$var wire 1 !$ CLK $end
+$var wire 8 |$ I [7:0] $end
+$var wire 8 }$ OutB [7:0] $end
+$var wire 4 ~$ RegSel [3:0] $end
+$var wire 8 !% R4_Q [7:0] $end
+$var wire 8 "% R3_Q [7:0] $end
+$var wire 8 #% R2_Q [7:0] $end
+$var wire 8 $% R1_Q [7:0] $end
+$var wire 2 %% OutBSel [1:0] $end
+$var wire 2 &% OutASel [1:0] $end
+$var wire 8 '% OutA [7:0] $end
+$var wire 2 (% FunSel [1:0] $end
+$var reg 8 )% OutA_temp [7:0] $end
+$var reg 8 *% OutB_temp [7:0] $end
+$scope module R1 $end
+$var wire 1 !$ CLK $end
+$var wire 1 +% E $end
+$var wire 8 ,% I [7:0] $end
+$var wire 8 -% Q [7:0] $end
+$var wire 2 .% FunSel [1:0] $end
+$var reg 8 /% Q_temp [7:0] $end
+$upscope $end
+$scope module R2 $end
+$var wire 1 !$ CLK $end
+$var wire 1 0% E $end
+$var wire 8 1% I [7:0] $end
+$var wire 8 2% Q [7:0] $end
+$var wire 2 3% FunSel [1:0] $end
+$var reg 8 4% Q_temp [7:0] $end
+$upscope $end
+$scope module R3 $end
+$var wire 1 !$ CLK $end
+$var wire 1 5% E $end
+$var wire 8 6% I [7:0] $end
+$var wire 8 7% Q [7:0] $end
+$var wire 2 8% FunSel [1:0] $end
+$var reg 8 9% Q_temp [7:0] $end
+$upscope $end
+$scope module R4 $end
+$var wire 1 !$ CLK $end
+$var wire 1 :% E $end
+$var wire 8 ;% I [7:0] $end
+$var wire 8 <% Q [7:0] $end
+$var wire 2 =% FunSel [1:0] $end
+$var reg 8 >% Q_temp [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu $end
+$var wire 4 ?% ALU_OutFlag [3:0] $end
+$var wire 1 !$ clk $end
+$var wire 8 @% ir_15_8 [7:0] $end
+$var wire 8 A% ir_7_0 [7:0] $end
+$var wire 1 "$ reset $end
+$var reg 4 B% ALU_FunSel [3:0] $end
+$var reg 2 C% ARF_FunSel [1:0] $end
+$var reg 2 D% ARF_OutCSel [1:0] $end
+$var reg 2 E% ARF_OutDSel [1:0] $end
+$var reg 3 F% ARF_RegSel [2:0] $end
+$var reg 1 G% AddressMode $end
+$var reg 4 H% Destreg [3:0] $end
+$var reg 1 .$ IR_Enable $end
+$var reg 2 I% IR_Funsel [1:0] $end
+$var reg 1 ,$ IR_LH $end
+$var reg 1 +$ Mem_CS $end
+$var reg 1 *$ Mem_WR $end
+$var reg 2 J% MuxASel [1:0] $end
+$var reg 2 K% MuxBSel [1:0] $end
+$var reg 1 '$ MuxCSel $end
+$var reg 16 L% ProgCounter [15:0] $end
+$var reg 2 M% RF_FunSel [1:0] $end
+$var reg 2 N% RF_OutASel [1:0] $end
+$var reg 2 O% RF_OutBSel [1:0] $end
+$var reg 4 P% RF_RegSel [3:0] $end
+$var reg 3 Q% RegSel [2:0] $end
+$var reg 4 R% SRCREG1 [3:0] $end
+$var reg 4 S% SRCREG2 [3:0] $end
+$var reg 3 T% SeqCounter [2:0] $end
+$var reg 1 U% finish $end
+$var reg 4 V% opcode [3:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx V%
+0U%
+b1 T%
+bx S%
+bx R%
+bx Q%
+b0 P%
+bx O%
+bx N%
+b11 M%
+b1 L%
+bx K%
+bx J%
+b10 I%
+bx H%
+xG%
+b0 F%
+b0 E%
+bx D%
+b11 C%
+bx B%
+bx A%
+bx @%
+b0 ?%
+bx >%
+b11 =%
+bx <%
+bx ;%
+1:%
+bx 9%
+b11 8%
+bx 7%
+bx 6%
+15%
+bx 4%
+b11 3%
+bx 2%
+bx 1%
+10%
+bx /%
+b11 .%
+bx -%
+bx ,%
+1+%
+bx *%
+bx )%
+b11 (%
+bx '%
+bx &%
+bx %%
+bx $%
+bx #%
+bx "%
+bx !%
+b0 ~$
+bx }$
+bx |$
+bx {$
+b10 z$
+bx y$
+bz x$
+bz w$
+b10 v$
+bx u$
+bz t$
+bx s$
+b11 r$
+bx q$
+bx p$
+1o$
+bx n$
+b11 m$
+bx l$
+bx k$
+1j$
+bx i$
+b11 h$
+bx g$
+bx f$
+1e$
+bx d$
+bx c$
+bx b$
+b11 a$
+bx `$
+bx _$
+b0 ^$
+bx ]$
+b0 \$
+bx [$
+bx Z$
+bx Y$
+xX$
+b0 W$
+bx V$
+bx U$
+0T$
+bx S$
+bx R$
+bx Q$
+bx P$
+bx O$
+bx N$
+bx M$
+bx L$
+bx K$
+b0 J$
+bx I$
+bx H$
+bx G$
+b11 F$
+bx E$
+b0 D$
+b0 C$
+bx B$
+bx A$
+bx @$
+b10 ?$
+bx >$
+bx =$
+bx <$
+bx ;$
+bx :$
+b11 9$
+bx 8$
+bx 7$
+b0 6$
+b0 5$
+bx 4$
+b11 3$
+bx 2$
+b0 1$
+b0 0$
+bx /$
+1.$
+b10 -$
+0,$
+0+$
+0*$
+bx )$
+bx ($
+x'$
+b11 &$
+bx %$
+bx $$
+b0 #$
+1"$
+1!$
+bx ~#
+bx }#
+b10101010 |#
+bx {#
+b0 z#
+b0 y#
+b0 x#
+b10101010 w#
+bx v#
+1u#
+0t#
+bx s#
+bx r#
+bx q#
+bx p#
+bx o#
+xn#
+bx m#
+bx l#
+bx k#
+bx j#
+xi#
+bx h#
+bx g#
+bx f#
+bx e#
+xd#
+bx c#
+bx b#
+bx a#
+bx `#
+x_#
+bx ^#
+bx ]#
+bx \#
+bx [#
+bx Z#
+bx Y#
+bx X#
+bx W#
+bx V#
+bx U#
+bx T#
+bx S#
+bx R#
+bx Q#
+bx P#
+bx O#
+bx N#
+bx M#
+bx L#
+bx K#
+bx J#
+xI#
+bx H#
+bx G#
+bx F#
+bx E#
+bx D#
+bx C#
+xB#
+bx A#
+bx @#
+bx ?#
+bx >#
+x=#
+bx <#
+bx ;#
+bx :#
+bx 9#
+x8#
+bx 7#
+bx 6#
+bx 5#
+bx 4#
+x3#
+bx 2#
+bx 1#
+bx 0#
+bx /#
+bx .#
+bx -#
+bx ,#
+bx +#
+bx *#
+bx )#
+bx (#
+bx '#
+bx &#
+bx %#
+bx $#
+bx ##
+bx "#
+bx !#
+bx ~"
+bz }"
+bx |"
+bx {"
+bx z"
+bx y"
+bx x"
+xw"
+bx v"
+bx u"
+bx t"
+bx s"
+xr"
+bx q"
+bx p"
+bx o"
+bx n"
+xm"
+bx l"
+bx k"
+bx j"
+bx i"
+bx h"
+bx g"
+bx f"
+bx e"
+bx d"
+bx c"
+bx b"
+bx a"
+x`"
+b0 _"
+bx ^"
+bx ]"
+0\"
+bx ["
+bx Z"
+bx Y"
+bx X"
+bx W"
+bx V"
+bx U"
+bx T"
+bx S"
+b0 R"
+bx Q"
+bx P"
+bx O"
+bx N"
+bx M"
+bx L"
+bx K"
+bx J"
+bx I"
+bx H"
+bx G"
+bx F"
+bx E"
+bx D"
+bx C"
+bx B"
+bx A"
+bx @"
+bx ?"
+bx >"
+x="
+b0 <"
+b0 ;"
+b0 :"
+09"
+bx 8"
+bx 7"
+bx 6"
+bx 5"
+x4"
+x3"
+x2"
+x1"
+bx 0"
+bx /"
+bx ."
+bx -"
+bx ,"
+bx +"
+x*"
+x)"
+b0 ("
+b0 '"
+x&"
+bx %"
+x$"
+bx #"
+1""
+x!"
+x~
+x}
+x|
+x{
+xz
+xy
+xx
+xw
+xv
+xu
+xt
+xs
+xr
+xq
+xp
+bx o
+bx n
+bx m
+bx l
+bx k
+bx j
+bx i
+bx h
+bx g
+bx f
+bx e
+bx d
+bx c
+b10101010xxxxxxxx b
+bx a
+b10101010xxxxxxxx `
+bx _
+b10101010 ^
+bx ]
+bx \
+0[
+b10101010 Z
+bx Y
+1X
+0W
+bx V
+bx U
+bx T
+bx S
+bx R
+xQ
+bx P
+bx O
+bx N
+bx M
+xL
+bx K
+bx J
+bx I
+bx H
+xG
+bx F
+bx E
+bx D
+bx C
+bx B
+bx A
+bx @
+bx ?
+bx >
+bx =
+bx <
+bx ;
+bx :
+bx 9
+bx 8
+bx 7
+bx 6
+bx 5
+bx 4
+bx 3
+x2
+bx 1
+bx 0
+0/
+b0 .
+b0 -
+0,
+b0 +
+b0 *
+b0 )
+b0 (
+bx '
+b0 &
+1%
+b0 $
+b0 #
+b0 "
+b0 !
+$end
+#1000
+0!$
+1t#
+#2000
+bz R%
+bz S%
+bz H%
+bz V%
+1o$
+1e$
+b11 3$
+b11 F$
+b11 a$
+b11 h$
+b11 m$
+b11 r$
+b11 C%
+b0 0$
+b0 C$
+b0 \$
+b0 F%
+b10 L%
+b10 T%
+b0 =$
+b0 P$
+bz >$
+bz A%
+bz @%
+b0 B$
+b0 O$
+b0 Z$
+b0 d$
+b0 !%
+b0 <%
+b0 >%
+b0 "%
+b0 7%
+b0 9%
+b0 #%
+b0 2%
+b0 4%
+b0 $%
+b0 -%
+b0 /%
+bz /$
+bz @$
+bz u$
+bz y$
+bz {$
+b0 [$
+b0 q$
+b0 s$
+b0 b$
+b0 g$
+b0 i$
+b0 ]$
+b0 l$
+b0 n$
+1!$
+0t#
+#3000
+0!$
+1t#
+#4000
+b11 L%
+b11 T%
+1!$
+0t#
+#5000
+1_#
+1d#
+1i#
+1n#
+1L
+1G
+1Q
+b1 <"
+b1000 !
+b1000 .
+0!$
+1t#
+b0 P#
+b0 N#
+b0 X#
+b0 O#
+1I#
+b10101010 K#
+b10101010 S#
+b10101010 a#
+b10101010 f#
+b10101010 k#
+b10101010 p#
+0""
+b0 \
+1W
+b0 9
+b0 7
+b0 A
+b0 8
+12
+b10101010 4
+b10101010 <
+b10101010 I
+b10101010 N
+b10101010 S
+b0 '
+0%
+#6000
+1U%
+b100 L%
+b100 T%
+1!$
+0t#
+0I#
+02
+#7000
+0!$
+1t#
+1I#
+12
+#8000
+0o$
+0e$
+1,$
+b1 3$
+b1 F$
+b1 a$
+b1 h$
+b1 m$
+b1 r$
+b1 C%
+b11 0$
+b11 C$
+b11 \$
+b11 F%
+b0 T%
+1!$
+0t#
+0I#
+02
+#9000
+0!$
+1t#
+1I#
+12
+#10000
+b1 B$
+b1 O$
+b1 Z$
+b1 d$
+b1 ]$
+b1 l$
+b1 n$
+1!$
+0t#
+0I#
+02
+1""
+0W
+1%
+0"$
+#11000
+0`"
+13#
+18#
+1=#
+1B#
+1r"
+1m"
+1w"
+bzxxxxxxxx !#
+bzxxxxxxxx ##
+04"
+b0 6"
+b0 G"
+b0 (#
+b0 7"
+b0 H"
+b0 *#
+b0 5"
+b0 F"
+b0 &#
+b0 4#
+b0 9#
+b0 >#
+b0 C#
+b0 8"
+b0 I"
+b0 +#
+b0 g
+b0 >"
+b0 Z"
+b0 k
+b0 @"
+b0 c"
+b0 l
+b0 A"
+b0 e"
+b0 j
+b0 ?"
+b0 a"
+b0 n"
+b0 s"
+b0 x"
+b0 m
+b0 B"
+b0 f"
+0&"
+0$"
+b0 %"
+b0 C"
+b0 |"
+b0 "#
+0*"
+0)"
+b0 -"
+b0 D"
+b0 /"
+b0 E"
+01"
+0s
+b0 h
+0v
+b0 o
+0q
+b0 e
+0r
+b0 f
+0!"
+0="
+0w
+0p
+0}
+02"
+0~
+03"
+0t
+b0 i
+0u
+b0 n
+0y
+b0 +"
+0x
+b110010 #"
+0z
+b10010110 ,"
+1{
+b1000 ."
+0|
+b10001000 0"
+0!$
+1t#
+1I#
+12
+#12000
+b10 B$
+b10 O$
+b10 Z$
+b10 d$
+b10 ]$
+b10 l$
+b10 n$
+1!$
+0t#
+0I#
+02
+#13000
+0!$
+1t#
+1I#
+12
+#14000
+b11 B$
+b11 O$
+b11 Z$
+b11 d$
+b11 ]$
+b11 l$
+b11 n$
+1!$
+0t#
+0I#
+02
+#15000
+b10 <"
+0!$
+1t#
+1I#
+12
+0""
+1W
+0%
+b1 y#
+b0 v#
+b0 {#
+b0 Q#
+b0 J#
+b0 R#
+b0 `#
+b0 e#
+b0 j#
+b0 o#
+b1 \
+b0 Y
+b0 ]
+b0 a
+b0 :
+b0 3
+b0 ;
+b0 H
+b0 M
+b0 R
+b1 '
+b1 &
+b1 *
+#16000
+b100 B$
+b100 O$
+b100 Z$
+b100 d$
+b100 ]$
+b100 l$
+b100 n$
+1!$
+0t#
+0I#
+02
+#17000
+0!$
+1t#
+1I#
+12
+#18000
+b101 B$
+b101 O$
+b101 Z$
+b101 d$
+b101 ]$
+b101 l$
+b101 n$
+1!$
+0t#
+0I#
+02
+#19000
+0!$
+1t#
+1I#
+12
+#20000
+b110 B$
+b110 O$
+b110 Z$
+b110 d$
+b110 ]$
+b110 l$
+b110 n$
+1!$
+0t#
+0I#
+02
+1""
+0W
+1%
+b1 Q#
+b0 M#
+b0 W#
+b0 L#
+b0 U#
+b1 :
+b0 6
+b0 @
+b0 5
+b0 >
+#21000
+b101000 ."
+0!$
+1t#
+1I#
+12
+#22000
+b111 B$
+b111 O$
+b111 Z$
+b111 d$
+b111 ]$
+b111 l$
+b111 n$
+1!$
+0t#
+0I#
+02
+#23000
+0!$
+1t#
+1I#
+12
+#24000
+b1000 B$
+b1000 O$
+b1000 Z$
+b1000 d$
+b1000 ]$
+b1000 l$
+b1000 n$
+1!$
+0t#
+0I#
+02
+#25000
+b11111111 "
+b11111111 +
+b11111111 -
+b11 <"
+0!$
+1t#
+1I#
+12
+0""
+1W
+0%
+b10 Q#
+b1 M#
+b1 W#
+b1 L#
+b1 U#
+b10 :
+b1 6
+b1 @
+b1 5
+b1 >
+b10 y#
+b1 v#
+b1 {#
+b10 \
+b1 Y
+b1 ]
+b1 a
+b10 '
+b10 &
+b10 *

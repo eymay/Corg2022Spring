@@ -3,7 +3,10 @@
 
 
 module n_bitRegister #(parameter N = 8) (
-    input CLK, E, [1:0] FunSel, [N-1:0] I,
+    input CLK, 
+    input E, 
+    input [1:0] FunSel,
+    input [N-1:0] I,
     output [N-1:0] Q
 );
 
@@ -39,8 +42,14 @@ endmodule
 //Part 2
 
 module RegFile (
-    input CLK, [1:0] OutASel, [1:0] OutBSel, [1:0] FunSel, [3:0] RegSel, [7:0] I, 
-    output [7:0] OutA, [7:0] OutB
+    input CLK,
+    input [1:0] OutASel,
+    input [1:0] OutBSel,
+    input [1:0] FunSel,
+    input [3:0] RegSel,
+    input [7:0] I, 
+    output [7:0] OutA,
+    output [7:0] OutB
 );
     wire [7:0] R1_Q;
     wire [7:0] R2_Q;
@@ -98,8 +107,14 @@ module RegFile (
 endmodule
 
 module ARF (
-    input CLK, [1:0] OutCSel, [1:0] OutDSel, [1:0] FunSel, [3:0] RegSel, [7:0] I,
-    output [7:0] OutC, [7:0] OutD
+    input CLK,
+    input [1:0] OutCSel,
+    input [1:0] OutDSel,
+    input [1:0] FunSel,
+    input [2:0] RegSel,
+    input [7:0] I,
+    output [7:0] OutC,
+    output [7:0] OutD
 );
 
     wire [7:0] PC_Q;
@@ -160,7 +175,11 @@ module ARF (
 endmodule
 
 module IR (
-    input CLK, LH, En, [1:0] FunSel, [7:0] I,
+    input CLK,
+    input LH,
+    input En,
+    input [1:0] FunSel,
+    input [7:0] I,
     output [15:0] IRout
 );
     reg [15:0] I_temp; //reg
@@ -186,8 +205,12 @@ endmodule
 
 //Part 3
 module ALU (
-    input CLK, [3:0] FunSel, input [7:0] A, [7:0] B, 
-    output [7:0] OutALU, reg [3:0] OutFlag = 4'b0
+    input CLK,
+    input [3:0] FunSel,
+    input [7:0] A,
+    input [7:0] B, 
+    output [7:0] OutALU,
+    output reg [3:0] OutFlag = 4'b0
 );
 
 
@@ -326,7 +349,7 @@ module Memory(
     //Declaration o?f the RAM Area
     reg[7:0] RAM_DATA[0:255];
     //Read Ram data from the file
-    initial $readmemh("RAM.mem", RAM_DATA);
+    initial $readmemh("ProjectFiles_10_05/RAM.mem", RAM_DATA);
     //Read the selected data from RAM
     always @(*) begin
         o = ~wr && ~cs ? RAM_DATA[address] : 8'hZ;
@@ -512,24 +535,23 @@ input [7:0] ir_7_0,
 input [3:0] ALU_OutFlag,
 input clk,
 input reset,
-output 
-    reg [1:0] RF_OutASel, 
-    reg [1:0] RF_OutBSel, 
-    reg [1:0] RF_FunSel,
-    reg [3:0] RF_RegSel,
-    reg [3:0] ALU_FunSel,
-    reg [1:0] ARF_OutCSel, 
-    reg [1:0] ARF_OutDSel, 
-    reg [1:0] ARF_FunSel,
-    reg [2:0] ARF_RegSel,
-    reg IR_LH,
-    reg IR_Enable,
-    reg [1:0] IR_Funsel,
-    reg Mem_WR,
-    reg Mem_CS,
-    reg [1:0] MuxASel,
-   reg [1:0] MuxBSel,
-    reg MuxCSel
+output reg [1:0] RF_OutASel, 
+   output reg [1:0] RF_OutBSel, 
+   output reg [1:0] RF_FunSel,
+   output reg [3:0] RF_RegSel,
+   output reg [3:0] ALU_FunSel,
+   output reg [1:0] ARF_OutCSel, 
+   output reg [1:0] ARF_OutDSel, 
+   output reg [1:0] ARF_FunSel,
+   output reg [2:0] ARF_RegSel,
+   output reg IR_LH,
+   output reg IR_Enable,
+   output reg [1:0] IR_Funsel,
+   output reg Mem_WR,
+   output reg Mem_CS,
+   output reg [1:0] MuxASel,
+  output reg [1:0] MuxBSel,
+   output reg MuxCSel
 );
     reg [3:0] opcode;
     //Instruction type 1, has address reference
@@ -580,7 +602,7 @@ output
     //Decode
     if(SeqCounter == 2) begin
         opcode <= ir_15_8[7:4];
-        if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
+        if((opcode == 4'h00) || (opcode == 4'h01) || (opcode == 4'h02) || (opcode == 4'h0F) ) begin 
             RegSel <= ir_15_8[1:0];
             AddressMode <= ir_15_8[2];
         end else begin
@@ -595,7 +617,7 @@ output
     //Execute 1
     if(SeqCounter == 3) begin
         case(opcode) 
-            2'h00:begin //BRA Branch
+            4'h00:begin //BRA Branch
                 `MUX_B_IROUT
                 `IN_ARF_PC
                 /*
@@ -604,7 +626,7 @@ output
                 ARF_RegSel = 3'b011; //enable PC only
                 */
                 end
-            2'h01:begin //LD Load   
+            4'h01:begin //LD Load   
                 `OUT_MEM
                 if(AddressMode) begin
                     `MUX_A_IROUT
@@ -615,38 +637,38 @@ output
                 `WRITE_RX(Regsel)
                 
                 end
-            2'h02:begin //ST Store
+            4'h02:begin //ST Store
                 RF_OutBSel <= RegSel;
                 ALU_FunSel <= 4'b0001; //pass B
                 `OUT_MEM 
                 //Mem_CS = 0;
                 //Mem_WR = 1;
                 end
-            2'h03:begin //MOV Move
+            4'h03:begin //MOV Move
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h04:begin //AND
+            4'h04:begin //AND
                 ALU_FunSel <= 4'b0111; //A and B
                 end
-            2'h05:begin //OR
+            4'h05:begin //OR
                  ALU_FunSel <= 4'b1000; //A or B
                 end
-            2'h06:begin //NOT
+            4'h06:begin //NOT
                 ALU_FunSel <= 4'b0010; // not A
                 end
-            2'h07:begin //ADD
+            4'h07:begin //ADD
                 ALU_FunSel <= 4'b0100; //  A + B
                 end
-            2'h08:begin //SUB
+            4'h08:begin //SUB
                 ALU_FunSel <= 4'b0110; //  A - B
                 end
-            2'h09:begin //LSR logical shift right
+            4'h09:begin //LSR logical shift right
                 ALU_FunSel <= 4'b1010; //  A<<
                 end
-            2'h0A:begin //LSL
+            4'h0A:begin //LSL
                 ALU_FunSel <= 4'b1011; //  >>A
                 end
-            2'h0B:begin // PUL
+            4'h0B:begin // PUL
                 `OUT_D_ARF_SP
                 `OUT_MEM
                 `MUX_A_MEMOUT
@@ -663,7 +685,7 @@ output
                 ARF_FunSel = 2'b00;
                 */
                 end
-            2'h0C:begin //PSH
+            4'h0C:begin //PSH
                 `DEC_ARF_SP
                 /*
                 ARF_RegSel = 3'b110;
@@ -677,13 +699,13 @@ output
                 RF_FunSel = 2'b10;
                 */
                 end
-            2'h0D:begin //INC
+            4'h0D:begin //INC
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h0E:begin //DEC
+            4'h0E:begin //DEC
                 ALU_FunSel <= 4'b0000; //load A
                 end
-            2'h0F:begin // BNE
+            4'h0F:begin // BNE
                     if (ALU_OutFlag[3] == 0) begin
                         MuxBSel <= AddressMode ? 2'b01 : 2'b10;
                         ARF_FunSel <= 2'b10;
@@ -695,7 +717,7 @@ output
 
             endcase
 
-            if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
+            if((opcode >= 4'h03 && opcode <= 4'h0A) ||  opcode == 4'h0D ||  opcode == 4'h0E ) begin 
             if(Destreg >= 4'b0100) begin 
                 MuxASel <= 2'b11;
                 RF_FunSel <= 2'b10;
@@ -704,7 +726,7 @@ output
                 ARF_FunSel <= 2'b10;
             end
             
-            if( opcode == 2'h0D )begin
+            if( opcode == 4'h0D )begin
                 if(SRCREG1>= 4'b0100) begin
                     RF_FunSel <= 2'b01; //increment
                 end else begin
@@ -713,7 +735,7 @@ output
             end
             
                 
-            if(opcode == 2'h0E) begin
+            if(opcode == 4'h0E) begin
                 if(SRCREG1>= 4'b0100) begin
                     RF_FunSel <= 2'b00; //decrement
                 end else begin
@@ -801,10 +823,10 @@ output
     //Execute 2
     if(SeqCounter == 4) begin
         case(opcode) 
-            2'h0B:begin // PUL
+            4'h0B:begin // PUL
                 `INC_ARF_SP
                 end
-            2'h0C:begin //PSH
+            4'h0C:begin //PSH
                 RF_OutBSel <= RegSel;
                 ALU_FunSel <= 4'b0001; //pass B
                 `OUT_D_ARF_SP
@@ -832,25 +854,24 @@ output
 endmodule
 
 module ALUSystem
-( input
-    [1:0] RF_OutASel, 
-    [1:0] RF_OutBSel, 
-    [1:0] RF_FunSel,
-    [3:0] RF_RegSel,
-    [3:0] ALU_FunSel,
-    [1:0] ARF_OutCSel, 
-    [1:0] ARF_OutDSel, 
-    [1:0] ARF_FunSel,
-    [2:0] ARF_RegSel,
-    IR_LH,
-    IR_Enable,
-    [1:0] IR_Funsel,
-    Mem_WR,
-    Mem_CS,
-    [1:0] MuxASel,
-    [1:0] MuxBSel,
-    MuxCSel,
-    Clock,
+( input [1:0] RF_OutASel, 
+    input [1:0] RF_OutBSel, 
+    input [1:0] RF_FunSel,
+    input [3:0] RF_RegSel,
+    input [3:0] ALU_FunSel,
+    input [1:0] ARF_OutCSel, 
+    input [1:0] ARF_OutDSel, 
+    input [1:0] ARF_FunSel,
+    input [2:0] ARF_RegSel,
+    input IR_LH,
+    input IR_Enable,
+    input [1:0] IR_Funsel,
+    input Mem_WR,
+    input Mem_CS,
+    input [1:0] MuxASel,
+    input [1:0] MuxBSel,
+    input MuxCSel,
+    input Clock,
     output [15:0] IROut,
     output [3:0] ALUOutFlag
     );
