@@ -100,26 +100,26 @@
 
 `define DEC_ARF_PC \
     ARF_RegSel = 3'b011;\
-    ARF_FunSel = 2'b00; //increment 
+    ARF_FunSel = 2'b00; //decrement 
 `define DEC_ARF_AR \
     ARF_RegSel = 3'b101;\
-    ARF_FunSel = 2'b00; //increment 
+    ARF_FunSel = 2'b00; //decrement 
 `define DEC_ARF_SP \
     ARF_RegSel = 3'b110;\
-    ARF_FunSel = 2'b00; //increment 
+    ARF_FunSel = 2'b00; //decrement 
 
 `define DEC_REG1 \
     RF_RegSel = 4'b0111;\
-    RF_FunSel = 2'b00; //increment 
+    RF_FunSel = 2'b00; //decrement 
 `define DEC_REG2 \
     RF_RegSel = 4'b1011;\
-    RF_FunSel = 2'b00; //increment 
+    RF_FunSel = 2'b00; //decrement 
 `define DEC_REG3 \
     RF_RegSel = 4'b1101;\
-    RF_FunSel = 2'b00; //increment 
+    RF_FunSel = 2'b00; //decrement 
 `define DEC_REG4 \
     RF_RegSel = 4'b1110;\
-    RF_FunSel = 2'b00; //increment 
+    RF_FunSel = 2'b00; //decrement 
 
 `define DEC_IR \
     IR_Enable = 1; \
