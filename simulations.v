@@ -687,6 +687,6 @@ module top_test();
          reset = 1; #100;
         reset = 0; #100;
         
-        $finish;
+        #2 $finish;
      end
 endmodule
