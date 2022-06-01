@@ -60,7 +60,7 @@
 
 `define IN_IR(LH) \
     IR_Enable = 1; \
-    IR_FunSel = 2'b10; \
+    IR_Funsel = 2'b10; \
     IR_LH = LH;
 
 `define WRITE_RX(Regsel) \
@@ -78,52 +78,52 @@
     ARF_RegSel = 3'b101;\
     ARF_FunSel = 2'b01; //increment 
 `define INC_ARF_SP \
-    ARF_RegSel = 3'b110;\ //enable 
+    ARF_RegSel = 3'b110;\
     ARF_FunSel = 2'b01; //increment 
 
 `define INC_REG1 \
-    RF_RegSel = 4'b0111;\ //enable 
+    RF_RegSel = 4'b0111;\
     RF_FunSel = 2'b01; //increment 
 `define INC_REG2 \
-    RF_RegSel = 4'b1011;\ //enable 
+    RF_RegSel = 4'b1011;\
     RF_FunSel = 2'b01; //increment 
 `define INC_REG3 \
-    RF_RegSel = 4'b1101;\ //enable 
+    RF_RegSel = 4'b1101;\
     RF_FunSel = 2'b01; //increment 
 `define INC_REG4 \
-    RF_RegSel = 4'b1110;\ //enable 
+    RF_RegSel = 4'b1110;\
     RF_FunSel = 2'b01; //increment 
 
-`define INC_IR\ 
+`define INC_IR \
     IR_Enable = 1; \
-    IR_FunSel = 2'b01; \ //increment
+    IR_Funsel = 2'b01; \ //increment
 
 `define DEC_ARF_PC \
-    ARF_RegSel = 3'b011;\ //enable 
+    ARF_RegSel = 3'b011;\
     ARF_FunSel = 2'b00; //increment 
 `define DEC_ARF_AR \
-    ARF_RegSel = 3'b101;\ //enable 
+    ARF_RegSel = 3'b101;\
     ARF_FunSel = 2'b00; //increment 
 `define DEC_ARF_SP \
-    ARF_RegSel = 3'b110;\ //enable 
+    ARF_RegSel = 3'b110;\
     ARF_FunSel = 2'b00; //increment 
 
 `define DEC_REG1 \
-    RF_RegSel = 4'b0111;\ //enable 
+    RF_RegSel = 4'b0111;\
     RF_FunSel = 2'b00; //increment 
 `define DEC_REG2 \
-    RF_RegSel = 4'b1011;\ //enable 
+    RF_RegSel = 4'b1011;\
     RF_FunSel = 2'b00; //increment 
 `define DEC_REG3 \
-    RF_RegSel = 4'b1101;\ //enable 
+    RF_RegSel = 4'b1101;\
     RF_FunSel = 2'b00; //increment 
 `define DEC_REG4 \
-    RF_RegSel = 4'b1110;\ //enable 
+    RF_RegSel = 4'b1110;\
     RF_FunSel = 2'b00; //increment 
 
-`define DEC_IR\ 
+`define DEC_IR \
     IR_Enable = 1; \
-    IR_FunSel = 2'b00; \ //decrement
+    IR_Funsel = 2'b00; \ //decrement
 
 `define OUT_MEM\
     Mem_CS = 0; \
@@ -155,9 +155,9 @@
     MuxCSel = 1;
 
 `define CLR_ARF\
-    ARF_RegSel = 3'b000;\ //enable 
+    ARF_RegSel = 3'b000;\
     ARF_FunSel = 2'b11; //clear
 
 `define CLR_RF\
-    RF_RegSel = 4'b0000;\ //enable 
+    RF_RegSel = 4'b0000;\
     RF_FunSel = 2'b11; //clear

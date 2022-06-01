@@ -507,6 +507,8 @@ module control_unit (
 input [7:0] ir_15_8,
 input [7:0] ir_7_0,
 input [3:0] ALU_OutFlag,
+input clk,
+input reset,
 output 
     reg [1:0] RF_OutASel, 
     reg [1:0] RF_OutBSel, 
@@ -548,13 +550,16 @@ output
             
         end
     end
-
-    if(ProgCounter == 0) begin
-        
-    end
     
+    always@(*) begin
+        if(ProgCounter == 0 || reset ==1) begin
+            `CLR_ARF
+            `CLR_RF
+        end
+    end
 
     //Fetch
+    always@(*)begin
     if(SeqCounter == 0) begin
         `OUT_D_ARF_PC
         `INC_ARF_PC
@@ -576,7 +581,7 @@ output
             RegSel <= ir_15_8[1:0];
             AddressMode <= ir_15_8[2];
         end else begin
-            Destreg = ir_11_8[3:0];
+            Destreg = ir_15_8[3:0];
             SRCREG2 = ir_7_0[3:0];
             SRCREG1 = ir_7_0[7:4];
         end
@@ -788,7 +793,7 @@ output
            
         end
         
-    end
+    
 
     //Execute 2
     if(SeqCounter == 4) begin
@@ -813,7 +818,8 @@ output
 
     if(SeqCounter == 5) 
         finish = 1;
-
+    
+    end
     /*
     always@(*) begin
         if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
@@ -857,7 +863,7 @@ output
          RF_RegSel = 4'b1111; // disable registers 
         end */
        
-    end
+    
     /*
     always@(*) begin
          if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
@@ -974,7 +980,7 @@ output
         end
     */
      
-    end
+    
     
     
     
@@ -1073,9 +1079,74 @@ ALU alu1(.FunSel(ALU_FunSel), .A(MuxCOut), .B(BOut), .OutALU(ALUOut), .OutFlag(A
 
 endmodule
 
+module top_system( input Clock, input reset);
 
+wire
+    [1:0] RF_OutASel, 
+    [1:0] RF_OutBSel, 
+    [1:0] RF_FunSel,
+    [3:0] RF_RegSel,
+    [3:0] ALU_FunSel,
+    [1:0] ARF_OutCSel, 
+    [1:0] ARF_OutDSel, 
+    [1:0] ARF_FunSel,
+    [2:0] ARF_RegSel,
+    IR_LH,
+    IR_Enable,
+    [1:0] IR_Funsel,
+    Mem_WR,
+    Mem_CS,
+    [1:0] MuxASel,
+    [1:0] MuxBSel,
+    MuxCSel;
 
+control_unit cpu(
+.ir_15_8(IROut[15:8]),
+.ir_7_0(IROut[7:0]),
+.ALU_OutFlag(ALUOutFlag),
+.clk(Clock),
+.RF_OutASel(RF_OutASel), 
+.RF_OutBSel(RF_OutBSel), 
+.RF_FunSel(RF_FunSel),
+.RF_RegSel(RF_RegSel),
+.ALU_FunSel(ALU_FunSel),
+.ARF_OutCSel(ARF_OutCSel), 
+.ARF_OutDSel(ARF_OutDSel), 
+.ARF_FunSel(ARF_FunSel),
+.ARF_RegSel(ARF_RegSel),
+.IR_LH(IR_LH),
+.IR_Enable(IR_Enable),
+.IR_Funsel(IR_Funsel),
+.Mem_WR(Mem_WR),
+.Mem_CS(Mem_CS),
+.MuxASel(MuxASel),
+.MuxBSel(MuxBSel),
+.MuxCSel(MuxCSel),
+.reset(reset)
+);
 
+ALUSystem ALU
+( 
+    .RF_OutASel, 
+    .RF_OutBSel, 
+    .RF_FunSel,  
+    .RF_RegSel,  
+    .ALU_FunSel, 
+    .ARF_OutCSel, 
+    .ARF_OutDSel, 
+    .ARF_FunSel,
+    .ARF_RegSel,
+    .IR_LH,
+    .IR_Enable,
+    .IR_Funsel,
+    .Mem_WR,
+    .Mem_CS,
+    .MuxASel,
+    .MuxBSel,
+    .MuxCSel,
+    .Clock
+    );
+endmodule
 
 
 
