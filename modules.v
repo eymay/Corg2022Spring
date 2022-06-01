@@ -353,43 +353,45 @@ endmodule
 `define  OUT_C_ARF_SP \
     ARF_OutCSel = 2'b11;
 
-`define OUT_A_REG1\
+`define OUT_A_REG1 \
     RF_OutASel = 2'b00;
-`define OUT_A_REG2\
+`define OUT_A_REG2 \
     RF_OutASel = 2'b01;
-`define OUT_A_REG3\
+`define OUT_A_REG3 \
     RF_OutASel = 2'b10;
-`define OUT_A_REG4\
+`define OUT_A_REG4 \
     RF_OutASel = 2'b11;
-`define OUT_B_REG1\
+`define OUT_B_REG1 \
     RF_OutBSel = 2'b00;
-`define OUT_B_REG2\
+`define OUT_B_REG2 \
     RF_OutBSel = 2'b01;
-`define OUT_B_REG3\
+`define OUT_B_REG3 \
     RF_OutBSel = 2'b10;
-`define OUT_B_REG4\
+`define OUT_B_REG4 \
     RF_OutBSel = 2'b11;
 
 
 
 `define IN_ARF_PC \
-    ARF_RegSel = 3'b011;\ //enable 
+    ARF_RegSel = 3'b011; \ //enable 
     ARF_FunSel = 2'b10; //load 
 `define IN_ARF_AR \
-    ARF_RegSel = 3'b101;\ //enable 
+    ARF_RegSel = 3'b101; \ //enable 
     ARF_FunSel = 2'b10; //load 
 `define IN_ARF_SP \
-    ARF_RegSel = 3'b110;\ //enable 
+    ARF_RegSel = 3'b110; \ //enable 
     ARF_FunSel = 2'b10; //load 
 
 `define IN_REG1 \
-    RF_RegSel = 4'b0111;\ //enable 
+    RF_RegSel = 4'b0111; \ //enable 
     RF_FunSel = 2'b10; //load 
+    
 `define IN_REG2 \
     RF_RegSel = 4'b1011;\ //enable 
     RF_FunSel = 2'b10; //load 
+    
 `define IN_REG3 \
-    RF_RegSel = 4'b1101;\ //enable 
+    RF_RegSel = 4'b1101; \ 
     RF_FunSel = 2'b10; //load 
 `define IN_REG4 \
     RF_RegSel = 4'b1110;\ //enable 
@@ -971,96 +973,7 @@ output
            
         end
     */
-       
-    always@(*) begin 
-        case(opcode) 
-            2'h00:begin //BRA Branch
-                
-                MuxBSel = 2'b01; //select ir output
-                ARF_FunSel = 2'b10; //load arf
-                ARF_RegSel = 3'b011; //enable PC only
-                
-                end
-            2'h01:begin //LD Load   
-                // assuming memory output is returned
-                MuxASel = AddressMode ? 2'b00 : 2'b01;
-                RF_FunSel = 2'b10; 
-                /*
-                if(AddressMode) begin
-                    MuxASel = 2'b00; //Ir out to Reg file              
-                end else begin
-                    MuxASel = 2'b01; //Ir out to Reg file                    
-                end
-                */
-                // load regfile
-                end
-            2'h02:begin //ST Store
-                RF_OutBSel = RegSel;
-                ALU_FunSel = 4'b0001; //pass B
-                Mem_CS = 0;
-                Mem_WR = 1;
-                end
-            2'h03:begin //MOV Move
-                ALU_FunSel = 4'b0000; //load A
-                end
-            2'h04:begin //AND
-                ALU_FunSel = 4'b0111; //A and B
-                end
-            2'h05:begin //OR
-                 ALU_FunSel = 4'b1000; //A or B
-                end
-            2'h06:begin //NOT
-                ALU_FunSel = 4'b0010; // not A
-                end
-            2'h07:begin //ADD
-                ALU_FunSel = 4'b0100; //  A + B
-                end
-            2'h08:begin //SUB
-                ALU_FunSel = 4'b0110; //  A - B
-                end
-            2'h09:begin //LSR logical shift right
-                ALU_FunSel = 4'b1010; //  A<<
-                end
-            2'h0A:begin //LSL
-                ALU_FunSel = 4'b1011; //  >>A
-                end
-            2'h0B:begin // PUL
-                RF_OutBSel = RegSel;
-                ALU_FunSel = 4'b0001; //pass B
-                ARF_OutDSel = 2'b11; // select SP
-                Mem_CS = 0;
-                Mem_WR = 1;
-                //,
-                ARF_RegSel = 3'b110;
-                ARF_FunSel = 2'b00;
-                end
-            2'h0C:begin //PSH
-                ARF_RegSel = 3'b110;
-                ARF_FunSel = 2'b01;
-                
-                ARF_OutDSel = 2'b11; // select SP
-                Mem_CS = 0;
-                Mem_WR = 0;
-                MuxASel = 2'b01; //memory output
-                
-                RF_FunSel = 2'b10;
-                end
-            2'h0D:begin //INC
-                ALU_FunSel = 4'b0000; //load A
-                end
-            2'h0E:begin //DEC
-                ALU_FunSel = 4'b0000; //load A
-                end
-            2'h0F:begin // BNE
-                    if (ALU_OutFlag[3] == 0) begin
-                        MuxBSel = AddressMode ? 2'b01 : 2'b10;
-                        ARF_FunSel = 2'b10;
-                        ARF_RegSel = 3'b011;
-                    end
-                end
-        
-        
-        endcase
+     
     end
     
     
