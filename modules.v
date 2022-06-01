@@ -579,14 +579,14 @@ output
 
     //Decode
     if(SeqCounter == 2) begin
-        opcode = ir_15_8[7:4];
+        opcode <= ir_15_8[7:4];
         if((opcode == 2'h00) || (opcode == 2'h01) || (opcode == 2'h02) || (opcode == 2'h0F) ) begin 
             RegSel <= ir_15_8[1:0];
             AddressMode <= ir_15_8[2];
         end else begin
-            Destreg = ir_15_8[3:0];
-            SRCREG2 = ir_7_0[3:0];
-            SRCREG1 = ir_7_0[7:4];
+            Destreg <= ir_15_8[3:0];
+            SRCREG2 <= ir_7_0[3:0];
+            SRCREG1 <= ir_7_0[7:4];
         end
 
         
@@ -616,35 +616,35 @@ output
                 
                 end
             2'h02:begin //ST Store
-                RF_OutBSel = RegSel;
-                ALU_FunSel = 4'b0001; //pass B
+                RF_OutBSel <= RegSel;
+                ALU_FunSel <= 4'b0001; //pass B
                 `OUT_MEM 
                 //Mem_CS = 0;
                 //Mem_WR = 1;
                 end
             2'h03:begin //MOV Move
-                ALU_FunSel = 4'b0000; //load A
+                ALU_FunSel <= 4'b0000; //load A
                 end
             2'h04:begin //AND
-                ALU_FunSel = 4'b0111; //A and B
+                ALU_FunSel <= 4'b0111; //A and B
                 end
             2'h05:begin //OR
-                 ALU_FunSel = 4'b1000; //A or B
+                 ALU_FunSel <= 4'b1000; //A or B
                 end
             2'h06:begin //NOT
-                ALU_FunSel = 4'b0010; // not A
+                ALU_FunSel <= 4'b0010; // not A
                 end
             2'h07:begin //ADD
-                ALU_FunSel = 4'b0100; //  A + B
+                ALU_FunSel <= 4'b0100; //  A + B
                 end
             2'h08:begin //SUB
-                ALU_FunSel = 4'b0110; //  A - B
+                ALU_FunSel <= 4'b0110; //  A - B
                 end
             2'h09:begin //LSR logical shift right
-                ALU_FunSel = 4'b1010; //  A<<
+                ALU_FunSel <= 4'b1010; //  A<<
                 end
             2'h0A:begin //LSL
-                ALU_FunSel = 4'b1011; //  >>A
+                ALU_FunSel <= 4'b1011; //  >>A
                 end
             2'h0B:begin // PUL
                 `OUT_D_ARF_SP
@@ -678,16 +678,16 @@ output
                 */
                 end
             2'h0D:begin //INC
-                ALU_FunSel = 4'b0000; //load A
+                ALU_FunSel <= 4'b0000; //load A
                 end
             2'h0E:begin //DEC
-                ALU_FunSel = 4'b0000; //load A
+                ALU_FunSel <= 4'b0000; //load A
                 end
             2'h0F:begin // BNE
                     if (ALU_OutFlag[3] == 0) begin
-                        MuxBSel = AddressMode ? 2'b01 : 2'b10;
-                        ARF_FunSel = 2'b10;
-                        ARF_RegSel = 3'b011;
+                        MuxBSel <= AddressMode ? 2'b01 : 2'b10;
+                        ARF_FunSel <= 2'b10;
+                        ARF_RegSel <= 3'b011;
                     end
                 end
             
@@ -697,101 +697,101 @@ output
 
             if((opcode >= 2'h03 && opcode <= 2'h0A) ||  opcode == 2'h0D ||  opcode == 2'h0E ) begin 
             if(Destreg >= 4'b0100) begin 
-                MuxASel = 2'b11;
-                RF_FunSel = 2'b10;
+                MuxASel <= 2'b11;
+                RF_FunSel <= 2'b10;
             end else begin
-                MuxBSel = 2'b11;
-                ARF_FunSel = 2'b10;
+                MuxBSel <= 2'b11;
+                ARF_FunSel <= 2'b10;
             end
             
             if( opcode == 2'h0D )begin
                 if(SRCREG1>= 4'b0100) begin
-                    RF_FunSel = 2'b01; //increment
+                    RF_FunSel <= 2'b01; //increment
                 end else begin
-                    ARF_FunSel = 2'b01;
+                    ARF_FunSel <= 2'b01;
                 end
             end
             
                 
             if(opcode == 2'h0E) begin
                 if(SRCREG1>= 4'b0100) begin
-                    RF_FunSel = 2'b00; //decrement
+                    RF_FunSel <= 2'b00; //decrement
                 end else begin
-                    ARF_FunSel = 2'b00;
+                    ARF_FunSel <= 2'b00;
                  end
             end
             case(Destreg)
             4'b0000:begin
-                ARF_RegSel = 3'b011;
+                ARF_RegSel <= 3'b011;
                 end
             4'b0001:begin
-                ARF_RegSel = 3'b011;
+                ARF_RegSel <= 3'b011;
                 end
             4'b0010:begin
-                ARF_RegSel = 3'b101;
+                ARF_RegSel <= 3'b101;
                 end
             4'b0011:begin
-                ARF_RegSel = 3'b110;
+                ARF_RegSel <= 3'b110;
                 end
             4'b0100:begin
-                RF_RegSel = 4'b0111;
+                RF_RegSel <= 4'b0111;
                 end
             4'b0101:begin
-                RF_RegSel = 4'b1011;
+                RF_RegSel <= 4'b1011;
                 end
             4'b0110:begin
-                RF_RegSel = 4'b1101;
+                RF_RegSel <= 4'b1101;
                 end
             4'b0111:begin
-                RF_RegSel = 4'b1110;
+                RF_RegSel <= 4'b1110;
                 end
         
             endcase
             
             case(SRCREG1)
              4'b0000:begin
-                ARF_OutCSel = 2'b00;
+                ARF_OutCSel <= 2'b00;
                 end
             4'b0001:begin
-                ARF_OutCSel = 2'b00;
+                ARF_OutCSel <= 2'b00;
                 end
             4'b0010:begin
-                ARF_OutCSel = 2'b10;
+                ARF_OutCSel <= 2'b10;
                 end
             4'b0011:begin
-                ARF_OutCSel = 2'b11;
+                ARF_OutCSel <= 2'b11;
                 end
             4'b0100:begin
-                RF_OutBSel = 2'b00;
+                RF_OutBSel <= 2'b00;
                 end
             4'b0101:begin
-                RF_OutBSel = 2'b01;
+                RF_OutBSel <= 2'b01;
                 end
             4'b0110:begin
-                RF_OutBSel = 2'b10;
+                RF_OutBSel <= 2'b10;
                 end
             4'b0111:begin
-                RF_OutBSel = 2'b11;
+                RF_OutBSel <= 2'b11;
                 end
                     
             endcase
 
             case (SRCREG2)
             4'b0100:begin
-                RF_OutASel = 2'b00;
+                RF_OutASel <= 2'b00;
                 end
             4'b0101:begin
-                RF_OutASel = 2'b01;
+                RF_OutASel <= 2'b01;
                 end
             4'b0110:begin
-                RF_OutASel = 2'b10;
+                RF_OutASel <= 2'b10;
                 end
             4'b0111:begin
-                RF_OutASel = 2'b11;
+                RF_OutASel <= 2'b11;
                 end
             endcase
 
-            MuxCSel = ((SRCREG2 < 4'b0100) || (SRCREG1 < 4'b0100)) ? 0:1;
+            MuxCSel <= ((SRCREG2 < 4'b0100) || (SRCREG1 < 4'b0100)) ? 0:1;
             end 
            
         end
@@ -805,14 +805,14 @@ output
                 `INC_ARF_SP
                 end
             2'h0C:begin //PSH
-                RF_OutBSel = RegSel;
-                ALU_FunSel = 4'b0001; //pass B
+                RF_OutBSel <= RegSel;
+                ALU_FunSel <= 4'b0001; //pass B
                 `OUT_D_ARF_SP
                 `IN_MEM
                 end
                 
             default: begin
-                finish = 1;
+                finish <= 1;
             end
 
         
@@ -820,7 +820,7 @@ output
     end
 
     if(SeqCounter == 5) 
-        finish = 1;
+        finish <= 1;
     
     end
    
@@ -937,7 +937,7 @@ module top_system( input Clock, input reset);
   wire  [1:0] MuxBSel;
   wire  MuxCSel;
   wire [15:0] IROut;
-
+  wire [3:0] ALUOutFlag;
 control_unit cpu(
 .ir_15_8(IROut[15:8]),
 .ir_7_0(IROut[7:0]),

@@ -679,12 +679,12 @@ module top_test();
   
      top_system top( Clock, reset);
      always begin
-        #100; Clock = ~Clock;
+        #10; Clock = ~Clock;
      end
      initial begin 
         
         Clock = 1;
-         reset = 1; #100;
+         reset = 1; #101;
         reset = 0; #100;
         
         #2 $finish;
